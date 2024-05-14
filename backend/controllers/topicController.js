@@ -17,6 +17,8 @@ const createTopic = async (req, res) => {
   }
 }
 
+// proverka
+
 module.exports = {
   createTopic
 }
