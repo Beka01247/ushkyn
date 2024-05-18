@@ -30,3 +30,7 @@ main{
   left: 0;
   right: 0; 
 }
+
+.container-flex{
+  display: flex;
+}
