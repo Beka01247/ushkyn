@@ -1,0 +1,12 @@
+.container-section{
+    background-color: #69A6EC;
+    padding: 2em;
+    margin:  1em;
+    width: 8%;
+    flex-basis: 12%;
+}
+
+.container-section:hover{
+    opacity: 50%;
+    cursor: pointer;
+}
