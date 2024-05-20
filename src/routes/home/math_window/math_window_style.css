@@ -1,0 +1,81 @@
+.container-math-window{
+    height: auto;
+    width: 80%;
+    display: inline-flex;
+    background-color: #DDD8E7;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+.container-label{
+    margin-top: 2vh;
+    width: 80%;
+    display: inline-flex;
+    background-color:#A3BCEA;
+    display: inline-flex;
+    height: min-content;
+}
+
+.container-math-label{
+    background-color: #DDD8E7;
+    padding-right: 5vh;
+    padding-left: 5vh;
+    margin-right: 3vh;
+    font-family: Inter;
+    font-size: 1em;
+    border-top-right-radius: 1em;
+    border-top-left-radius: 1em;
+    color: #2C367E;
+    cursor: pointer;
+}
+
+.container-block{
+    display: block;
+}
+
+.container-inline-flex{
+    display: inline-flex;
+}
+
+.grey-br{
+    background-color: #DDD8E7;
+    height: 1vh;
+    width: 80%;
+    margin: auto;
+}
+
+.container-orange{
+    background-color: #E39259;
+}
+
+.container-w-80{
+    width: 80%;
+}
+
+.gradeNumber{
+    background-color: #DDD8E7;
+    margin: 0.5em;
+    padding:0 4em;
+    border-radius: 1em;
+    display: inline;
+}
+
+.container-parents-label{
+    background-color: #C8C1DAD8;
+    padding-right: 5vh;
+    padding-left: 5vh;
+    margin-right: 3vh;
+    font-family: Inter;
+    font-size: 1em;
+    border-top-right-radius: 1em;
+    border-top-left-radius: 1em;
+    color: #2C367E;
+}
+.container-parents-label:hover{
+    cursor: pointer;
+}
+
+.gradeNumber:hover{
+    cursor:pointer;
+}
