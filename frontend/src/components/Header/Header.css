@@ -1,0 +1,40 @@
+.logo{
+    justify-content: left;
+    margin-top: 0.5em;
+    flex-basis: 20%;
+    cursor: pointer;
+}
+
+.user{
+    display: flex;
+    justify-content: right; 
+    align-items: center;
+    flex-basis: 20%;
+    flex-direction: row;
+    flex-wrap: wrap;
+    width: 100%;
+    cursor: pointer;
+}
+
+.container-header{
+    background-color: #DDD8E7;
+    display: flex;
+    flex-direction: row;
+    box-sizing: border-box;
+    flex-wrap: wrap;
+    height: 10%;
+    align-items: center;
+    justify-content: space-around;
+}
+
+.username{
+    display: block;
+    font-family: Inter;
+    font-size: 1em;
+    color: #2C367E;
+
+}
+
+.userlogo{
+    width: 2em;
+}

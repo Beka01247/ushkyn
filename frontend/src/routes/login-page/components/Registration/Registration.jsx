@@ -1,5 +1,5 @@
 import "./Registration.css"
-import Logo from "../Logo/Logo"
+import Logo from "../../../../components/Logo/Logo"
 import Login from "./Login"
 import Password from "./Password"
 import Button from "./Button"
