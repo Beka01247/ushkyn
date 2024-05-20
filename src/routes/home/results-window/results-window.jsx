@@ -1,11 +1,7 @@
 import React from 'react';
-import "./math_window_style.css"
-import Section from "./section/section"
-import { Button, Flex, Segmented } from "antd"
-import { Layout } from "antd"  
+import "./results-window.css"
 
-
-export default function Math_window(){
+export default function Results_window(){
     return(
         <div>
             <div className="container-label">
@@ -20,20 +16,9 @@ export default function Math_window(){
             </div>
             <div className="grey-br container-inline-block"></div>
             <div className="container-orange container-w-80 container-inline-flex">
-                <div className="gradeNumber">
-                    <p>5 сынып</p>
-                </div>
             </div>
 
             <div className="container-math-window">
-                <Section/>
-                <Section/>
-                <Section/>
-                <Section/>
-                <Section/>
-                <Section/>
-                <Section/>
-                <Section/>
             </div>
         </div>
     )
