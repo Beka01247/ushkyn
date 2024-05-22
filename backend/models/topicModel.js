@@ -1,31 +1,35 @@
 const mongoose = require('mongoose');
+const { Schema } = mongoose;
 
-const topicSchema = new mongoose.Schema({
-  title: {
-    type: String,
-    required: true
-  },
-  subTitles: {
-    title: String,
-    subtopics: [{
-      title: String,
-      videos: [{
-        title: String,
-        url: String
-      }],
-      tests: [{
-        title: String,
-        questions: [{
-          question_text: String,
-          correct_answer: String,
-          explanation_video: {
-            title: String,
-            url: String
-          }
-        }]
-      }]
-    }]
-  }
+const TestOptionSchema = new Schema({
+  text: String,
+  isCorrect: Boolean
 });
 
-module.exports = mongoose.model('Topic', topicSchema);
+const TestSchema = new Schema({
+  question: String,
+  options: [TestOptionSchema],
+  videoExplanation: String
+});
+
+const SubsubtopicSchema = new Schema({
+  title: String,
+  videos: [String],
+  tests: [TestSchema]
+});
+
+const SubtopicSchema = new Schema({
+  title: String,
+  subsubtopics: [SubsubtopicSchema]
+});
+
+const TopicSchema = new Schema({
+  title: String,
+  subtopics: [SubtopicSchema]
+});
+
+const Topic = mongoose.model('Topic', TopicSchema);
+
+module.exports = {
+  Topic
+};

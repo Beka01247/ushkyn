@@ -28,6 +28,22 @@ const userSchema = new Schema({
   name: {
     type: String,
     required: true
+  },
+  isAdmin: {
+    type: Boolean,
+    default: false
+  },
+  activeSession: {
+    type: String,
+    default: null
+  },
+  multipleLoginAttempts: {
+    type: Number,
+    default: 0
+  },
+  banned: {
+    type: Boolean,
+    default: false
   }
 });
 
