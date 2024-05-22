@@ -1,22 +1,21 @@
-const Topic = require('../models/topicModel');
+const { Topic } = require('../models/topicModel');
 
-// get all topics
-const getTopics = async (req, res) => {
-  const topic = await Topic.find({}).sort({createdAt: 1});
-  res.status(200).json(topic);
-}
-
-// create new topic
-const createTopic = async (req, res) => {
-  const { title } = req.body;
+exports.createTopic = async (req, res) => {
   try {
-    const topic = await Topic.create({ title });
-    res.status(200).json({ topic });
-  } catch (err) {
-    res.status(400).json({ error: err.message });
+    const newTopic = new Topic(req.body);
+    await newTopic.save();
+    res.status(201).json(newTopic); 
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
-}
+};
 
-module.exports = {
-  createTopic
-}
+exports.getTopics = async (req, res) => {
+  try {
+    const topics = await Topic.find();
+    res.status(200).json({topics});
+  } catch (error) {
+    res.status(400).json({error: error.message});
+  }
+};
+
