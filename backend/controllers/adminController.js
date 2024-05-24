@@ -29,7 +29,7 @@ exports.updateTopic = async (req, res) => {
 exports.deleteTopic = async (req, res) => {
   try {
     await Topic.findByIdAndDelete(req.params.id);
-    res.status(200).json({ message: 'Topic deleted successfully' });
+    res.status(200).json({ message: 'Тарау өшірілді' });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -58,7 +58,7 @@ exports.getUsers = async (req, res) => {
 exports.deleteUser = async (req, res) => {
   try {
     await User.findByIdAndDelete(req.params.id);
-    res.status(200).json({ message: 'User deleted successfully' });
+    res.status(200).json({ message: 'Пайдаланушы өшірлді' });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

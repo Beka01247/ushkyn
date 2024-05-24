@@ -51,20 +51,20 @@ userSchema.statics.signup = async function(phone, password, school, city, grade,
 
   // validaton
   if (!phone || !password || !school || !city || !grade || !name ) {
-    throw Error('All fields must be filled!');
+    throw Error('Барлық бағананы толтыру қажет');
   }
 
   if (!validator.isMobilePhone(phone)) {
-    throw new Error('Invalid phone number');
+    throw new Error('Жарамсыз телефон нөмірі');
   }
 
   if (!validator.isStrongPassword(password)) {
-    throw new Error('Password is not strong enough!');
+    throw new Error('Құпия сөз жеткілікті қауіпсіз емес');
   }
 
   const exists = await this.findOne({ phone });
   if (exists) {
-    throw new Error('Already exists');
+    throw new Error('Бұндай пайдаланушы бар');
   }
 
   const salt = await bcrypt.genSalt(10);
@@ -77,18 +77,18 @@ userSchema.statics.signup = async function(phone, password, school, city, grade,
 
 userSchema.statics.login = async function(phone, password) {
   if (!phone || !password) {
-    throw Error('All fields must be filled!');
+    throw Error('Барлық бағананы толтыру қажет');
   }
 
   const user = await this.findOne({phone});
 
   if (!user) {
-    throw new Error('Incorrect phone number!');
+    throw new Error('Телефон нөмірі қате терілді');
   }
 
   const match = await bcrypt.compare(password, user.password);
   if (!match) {
-    throw new Error('Incorrect password!');
+    throw new Error('Пароль қате терілді');
   }
 
   return user;

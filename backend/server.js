@@ -5,12 +5,14 @@ const mongoose = require('mongoose');
 const topicRoutes = require('./routes/topic');
 const userRoutes = require('./routes/auth');
 const adminRoutes = require('./routes/admin');
+const cors = require('cors')
 
 // app
 const app = express();
 
 // middlewares
 app.use(express.json());
+app.use(cors());
 
 // routes
 app.use('/api/topics', topicRoutes);
