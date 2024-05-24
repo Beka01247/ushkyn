@@ -16,8 +16,8 @@ exports.loginUser = async (req, res, next) => {
     const user = await User.login(phone, password);
     const token = createToken(user._id);
     res.status(200).json({ phone, token });
-  } catch (err) {
-    res.status(400).json({ err: err.message });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
   }
 }
 
