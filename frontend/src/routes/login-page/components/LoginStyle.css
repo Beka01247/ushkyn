@@ -1,0 +1,45 @@
+.LoginForm #tel{
+    background-image: url('/src/assets/phone.svg');
+    background-repeat: no-repeat;
+    background-position: 1em;
+    width: 100%;
+    height: 100%;
+    border: none;
+    padding: 1em 1em 1em 3.3em;
+    font-size: 1em;
+    border-radius: 10px;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.LoginForm input{
+    width: 100%;
+    height: 100%;
+    border: none;
+    padding: 1em 1em 1em 1em;
+    font-size: 1em;
+    border-radius: 10px;
+    max-width: 100%;
+    box-sizing: border-box;
+}
+
+.LoginForm input:focus {
+    background-color: lightblue;
+    border: 1px solid black;
+  }
+
+.LoginForm input::placeholder{
+    color: #2C367E;
+    font: 2em;
+}
+
+.LoginForm h2{
+    font-family: Inter;
+    font-size: 1.2em;
+    text-align: left;
+    color: #2C367E;
+}
+
+.LoginForm{
+    text-align: left;
+}

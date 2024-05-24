@@ -1,0 +1,43 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter&display=swap');
+
+.RegistrationDiv{
+    width: 30%;
+    height: 100%;
+    background-color: #DDD8E7;
+    display: inline-block;
+    border-radius: 2%;
+    padding: 5%;
+}
+
+.Greetings{
+    font-size: 1.6em;
+    font-family: Inter;
+    color: #2C367E;
+}
+
+hr{
+    color: #2C367E;
+    border: 1px solid #2C367E;
+}
+
+.LoginText{
+    font-family: Inter;
+    font-size: 0.7em;
+    text-align: left;
+    color: #2C367E;
+}
+
+.ForgotPassword{
+    margin-top: 1em;
+}
+
+.ForgotPassword a{
+    color: #0047FF;
+}
+
+.ForgotPassword a:hover{
+    cursor: pointer;
+}
+
+
+
