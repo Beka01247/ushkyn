@@ -13,7 +13,7 @@ return(
 
         <div className='container-centered'>
             <Math_window/>
-            <Results_window/>
+            {/* <Results_window/> */}
         </div>
         <div>
             <Footer/>

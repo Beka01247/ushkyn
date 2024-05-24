@@ -1,4 +1,5 @@
 {
+  "proxy": "http://localhost:4001/",
   "name": "ushqyn",
   "private": true,
   "version": "0.0.0",
@@ -11,6 +12,7 @@
   },
   "dependencies": {
     "antd": "^5.17.2",
+    "axios": "^1.7.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.23.1"
