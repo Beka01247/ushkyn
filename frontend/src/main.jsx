@@ -10,12 +10,14 @@ import ErrorPage from './routes/not-found/error-page.jsx'
 import Login_page from './routes/login-page/login-page.jsx'
 import Home from './routes/home/home.jsx'
 import { AuthContext, AuthContextProvider } from './context/authContext.jsx'
-
+import { TopicContextProvider } from './context/topicContext.jsx'
 
   ReactDOM.createRoot(document.getElementById("root")).render(
     <React.StrictMode>
       <AuthContextProvider>
-        <App />
+        <TopicContextProvider>
+          <App />
+        </TopicContextProvider>
       </AuthContextProvider>
     </React.StrictMode>
   );
