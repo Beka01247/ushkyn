@@ -4,7 +4,7 @@ const topicController = require('../controllers/topicController')
 
 const router = express.Router();
 
-router.post('/add-topic', topicController.createTopic);
-router.get('/all-topics', topicController.getTopics);
+// all topics
+router.get('/', topicController.getTopics);
 
 module.exports = router;
