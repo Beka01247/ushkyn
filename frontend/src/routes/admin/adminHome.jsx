@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { AppShell, Burger, Button, Grid, Group, useMantineTheme, Flex, TextInput, Checkbox, Select } from '@mantine/core';
 import { useDisclosure } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
-import { ChangeTopics } from './changeTopics';
+import { ChangeTopics } from './changeTopics/changeTopics';
 
 export function AdminHome() {
   const [opened, { toggle }] = useDisclosure();

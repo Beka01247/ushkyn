@@ -4,7 +4,6 @@ import './Header.css'
 import { useAuthContext } from "../../hooks/useAuthContext"
 import { Logout } from "../logout/logout"
 import {Col, Layout, Menu, Row, theme} from 'antd'
-import userlogo from './assets/userlogo'
 
 import {
   MailOutlined,
@@ -105,7 +104,7 @@ export default function HeaderHome() {
       
       <div className="user">
         <div className="userlogo">
-          <img src={userlogo} alt="User Logo" />
+          {/* <img src={userlogo} alt="User Logo" /> */}
         </div>
         {user && (
           <div className="username">
@@ -114,7 +113,7 @@ export default function HeaderHome() {
           </div>
         )}
         <div className="userlogo">
-          <img src={downarrow} alt="Dropdown Arrow" />
+          {/* <img src={downarrow} alt="Dropdown Arrow" /> */}
         </div>
       </div>
     </div>
