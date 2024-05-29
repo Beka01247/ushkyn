@@ -1,11 +1,15 @@
+import React from 'react';
 import "./section.css";
+import { Row, Col } from 'antd';
 
-export default function Section({ topics }) { // Destructure 'topics' here
+export default function Section({ topic }) {
     return (
-        <div className="container-section">
-            {topics.map((topic) => (
-                <h2 key={topic._id}>{topic.title}</h2>
-            ))}
-        </div>
+        <Row justify="center" gutter={[24, 24]}>
+            <Col span={6}>
+                <div className='container-section'>
+                    <h2>{topic.title}</h2>  
+                </div>
+            </Col>
+        </Row>
     );
 }

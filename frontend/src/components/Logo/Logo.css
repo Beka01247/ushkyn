@@ -1,3 +1,7 @@
-img {
-    width: 60%;
+.logo img {
+    max-width: 200px;
+    width: 200px;
+    height: 84px;
+    margin: 0 auto;
+    text-indent: -9999px;
 }

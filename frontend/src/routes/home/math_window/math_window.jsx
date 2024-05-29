@@ -1,8 +1,8 @@
-// src/routes/home/math_window/math_window.jsx
 import React, { useEffect, useState } from 'react';
 import "./math_window_style.css";
 import Section from "./section/section";
 import { useNavigate } from 'react-router-dom';
+import { Flex } from 'antd';
 
 export default function Math_window() {
   const [topics, setTopics] = useState(null);
@@ -25,8 +25,8 @@ export default function Math_window() {
       });
   }, []);
 
-  const handleSectionClick = () => {
-    navigate('/home/section', { state: { topics } });
+  const handleSectionClick = (topic) => {
+    navigate('/home/section', { state: { topic } });
   }
 
   return (
@@ -47,9 +47,15 @@ export default function Math_window() {
           <p>5 сынып</p>
         </div>
       </div>
-      {topics && <div className="container-math-window" onClick={handleSectionClick}>
-        <Section topics={topics} />
-      </div>}
+      <div className="container-math-window">
+        <Flex align="space-evenly" wrap>
+        {topics && topics.map(topic => (
+          <div key={topic._id} onClick={() => handleSectionClick(topic)}>
+            <Section topic={topic} />
+          </div>
+        ))}
+        </Flex>
+      </div>
     </div>
   );
 }
