@@ -1,14 +1,4 @@
-const { Topic } = require('../models/topicModel');
-
-exports.createTopic = async (req, res) => {
-  try {
-    const newTopic = new Topic(req.body);
-    await newTopic.save();
-    res.status(201).json(newTopic); 
-  } catch (error) {
-    res.status(400).json({ error: error.message });
-  }
-};
+const Topic = require('../models/topicModel');
 
 exports.getTopics = async (req, res) => {
   try {
@@ -18,4 +8,3 @@ exports.getTopics = async (req, res) => {
     res.status(400).json({error: error.message});
   }
 };
-
