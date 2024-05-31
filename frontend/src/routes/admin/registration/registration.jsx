@@ -34,7 +34,7 @@ export const Registration = () => {
         if (!value) {
           return 'Нөмір теру міндетті';
         }
-        return /^\+7\d{10}$/.test(value) ? null : 'Қате нөмір терілді';
+        return /^7\d{10}$/.test(value) ? null : 'Қате нөмір терілді';
       },
       password: (value) => (value ? null : 'Пароль теру міндетті'),
       name: (value) => (value ? null : 'Есімін теру міндетті'),

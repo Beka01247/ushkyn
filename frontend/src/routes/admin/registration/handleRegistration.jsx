@@ -1,6 +1,9 @@
 export const HandleRegistration = async (values) => {
   // Retrieve user data from localStorage
   const body = JSON.stringify(values)
+
+  console.log(body)
+
   const userString = localStorage.getItem('user');
   if (!userString) {
     console.error('User not found in localStorage');
@@ -20,7 +23,6 @@ export const HandleRegistration = async (values) => {
       method: 'POST',
       headers: {
         'Authorization': 'Bearer ' + token,
-        'Content-Type': 'application/json',
       },
       body: body
     });
@@ -29,8 +31,8 @@ export const HandleRegistration = async (values) => {
 
     // Handle non-OK responses
     if (!response.ok) {
-      console.error('Error:', json.error);
-      return json.error;
+      console.error('Error:', json.error || json.message);
+      return json.error || json.message
     }
     
     if(response.ok)
