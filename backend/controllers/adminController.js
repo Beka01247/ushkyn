@@ -38,13 +38,13 @@ exports.addUser = async (req, res) => {
     const user = await User.signup(phone, password, school, city, grade, name);
     res.status(200).json(user);
   } catch (err) { 
-    res.status(400).json({err: err.message});
+    res.status(400).json({error: error.message});
   }
 }
 
 exports.getUsers = async (req, res) => {
   try {
-    const users = await User.find({});
+    const users = await User.find({isAdmin: false});
     res.status(200).json(users);
   } catch (error) {
     res.status(400).json({ error: error.message });
