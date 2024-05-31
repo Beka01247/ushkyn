@@ -1,4 +1,4 @@
-import { Button, Center, Loader, TextInput } from "@mantine/core";
+import { Button, Center, Flex, Loader, TextInput, Anchor } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { HandleDelete } from "./handleDelete";
 import { useForm } from "@mantine/form";
@@ -9,6 +9,7 @@ export const ChangeTopics = () => {
 
   const [topics, setTopics] = useState([]);
   const [pressedButton, setPressedButton] = useState('');
+  const [refresh, setRefresh] = useState(true)
 
   const form = useForm({
     initialValues: {
@@ -16,21 +17,9 @@ export const ChangeTopics = () => {
     }
   });
 
-  const userString = localStorage.getItem('user');
-    if (!userString) {
-      console.error('User not found in localStorage');
-      return;
-    }
-  
-    const user = JSON.parse(userString);
-    const token = user.token;
-  
-    if (!token) {
-      console.error('Token not found');
-      return;
-    }
 
   useEffect(() => {
+    const fetchData = async () =>{
     const userString = localStorage.getItem('user');
     if (!userString) {
       console.error('User not found in localStorage');
@@ -62,19 +51,47 @@ export const ChangeTopics = () => {
       .catch(error => {
         console.error('There was a problem with the fetch operation:', error);
       });
-  }, []);
-
+    }
+    fetchData()
+    setRefresh(false)
+    console.log('they called me')
+  }, [refresh]);
+ 
   const handleCreateClick = () => {
     setPressedButton('create');
   };
 
-  const handleSubmit = (token, values) => {
-    HandleCreate(token, values);
-    setPressedButton('');
+  const handleSubmit = async (values) => {
+    const userString = localStorage.getItem('user');
+    if (!userString) {
+      console.error('User not found in localStorage')
+      return;
+    }
+  
+    const user = JSON.parse(userString);
+    const token = user.token;
+  
+    if (!token) {
+      console.error('Token not found');
+      return;
+    }
+
+    setPressedButton('submit')
+    console.log(pressedButton)
+    await HandleCreate(token, values)
+    setRefresh(true)
+  };
+
+  const handleDelete = async (_id) => {
+    
+    await HandleDelete(_id)
+    setRefresh(true)
+    
   };
 
   const handleSave = (id) => {
-    console.log(id);
+    setPressedButton('save');
+    setRefresh(true)
   };
 
   return (
@@ -83,27 +100,33 @@ export const ChangeTopics = () => {
 
       {topics.length > 0 && topics.map((topic) => (
         <div key={topic._id}>
-          <p>{topic.title}</p>
-          <Button onClick={() => handleSave(topic._id)}>Save</Button>
-          <Button>Edit</Button>
-          <Button onClick={() => HandleDelete(topic._id)}>Delete</Button>
+          <Anchor href="https://mantine.dev/" target="_blank" underline="never">{topic.title}</Anchor>
+          <Flex align={'center'} justify={'center'} wrap={'wrap'} gap={'xl'}>
+          <Button color='green' onClick={() => {handleSave(topic._id)}}>Save</Button>
+          <Button color='blue'>Edit</Button>
+          <Button color='red' onClick={() => {handleDelete(topic._id)}}>Delete</Button>
+          </Flex>
         </div>
       ))}
 
-      <Button onClick={handleCreateClick}>Create</Button>
-      {pressedButton === 'create' && (
-        <Center>
-          <form onSubmit={form.onSubmit(handleSubmit)}>
-            <TextInput
-              withAsterisk
-              label="Тараудың тақырыбы"
-              placeholder="Тараудың тақырыбы"
-              {...form.getInputProps('title')}
-            />
-            <Button type="submit">Submit</Button>
-          </form>
-        </Center>
-      )}
+      <Flex align={'center'} justify={'center'} wrap={'wrap'} gap={'xl'} mt={32}>
+        <Button onClick={handleCreateClick}>Create</Button>
+      </Flex>
+      <Flex align={'center'} justify={'center'} wrap={'wrap'} gap={'xl'} mt={16}>
+          {pressedButton === 'create' && (
+            <Center>
+              <form onSubmit={form.onSubmit(handleSubmit)}>
+                <TextInput
+                  withAsterisk
+                  label="Тараудың тақырыбы"
+                  placeholder="Тараудың тақырыбы"
+                  {...form.getInputProps('title')}
+                />
+                <Button type="submit">Submit</Button>
+              </form>
+            </Center>
+          )}  
+      </Flex>
     </div>
   );
 };
