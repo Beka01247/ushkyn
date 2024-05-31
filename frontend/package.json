@@ -1,5 +1,5 @@
 {
-  "proxy": "http://localhost:4001/",
+  "proxy": "http://localhost:4000/",
   "name": "ushqyn",
   "private": true,
   "version": "0.0.0",
@@ -11,6 +11,13 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@ant-design/icons": "^5.3.7",
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@mantine/core": "^7.10.0",
+    "@mantine/form": "^7.10.0",
+    "@mantine/hooks": "^7.10.0",
+    "@mantine/notifications": "^7.10.1",
     "antd": "^5.17.2",
     "axios": "^1.7.2",
     "react": "^18.2.0",
