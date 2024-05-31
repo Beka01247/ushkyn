@@ -1,8 +1,5 @@
 .container-section{
     background-color: #69A6EC;
-    padding: 2em;
-    margin:  1em;
-    flex-basis: 12%;
 }
 
 .container-section:hover{

@@ -3,6 +3,8 @@ import "./Logo.css"
 
 export default function Logo(){
     return (
-            <img className='mainLogo' src= {logo}/>   
+        <div className="logo">
+            <img className='mainLogo' src= {logo}/>  
+        </div> 
     )
 }
