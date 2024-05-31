@@ -3,8 +3,9 @@ import { AppShell, Burger, Button, Grid, Group, useMantineTheme, Flex, TextInput
 import { useDisclosure } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
 import { ChangeTopics } from './changeTopics/changeTopics';
+import { Registration } from './registration/registration';
 
-export function AdminHome() {
+export default function AdminHome() {
   const [opened, { toggle }] = useDisclosure();
   const theme = useMantineTheme();
   const [activeComponent, setActiveComponent] = useState('Students');
@@ -55,107 +56,6 @@ export function AdminHome() {
   );
 }
 
-const Registration = () => {
-    const form = useForm({
-      initialValues: {
-        phone: '+7',
-        admin: false,
-        password: '',
-        framework: 'N/A' // Default value for the Select component
-      },
-  
-      validate: {
-        phone: (value) => {
-          if (!value) {
-            return 'Нөмір теру міндетті';
-          }
-          return /^\+7\d{10}$/.test(value) ? null : 'Қате нөмір терілді';
-        },
-        password: (value) => (value ? null : 'Пароль теру міндетті'),
-        firstName: (value) => (value ? null : 'Есімін теру міндетті'),
-        secondName: (value) => (value ? null : 'Тегін теру міндетті'),
-        school: (value, values) => values.admin ? null : (value ? null : 'Мектеп таңдау міндетті'),
-        city: (value, values) => values.admin ? null : (value ? null : 'Қала таңдау міндетті'),
-          
-      },
-    });
-  
-    return (
-      <Flex justify={'center'}>
-        <form
-          onSubmit={form.onSubmit((values) => {
-            if (!values.framework || values.framework === 'N/A') {
-              values.framework = 'N/A';
-            }
-            console.log(values);
-          })}
-        >
-          <TextInput
-            withAsterisk
-            label="Телефон"
-            placeholder="+7"
-            {...form.getInputProps('phone')}
-          />
-  
-          <TextInput
-            withAsterisk
-            label="Пароль"
-            {...form.getInputProps('password')}
-          />
-  
-          <Checkbox
-            mt="md"
-            label="Admin"
-            {...form.getInputProps('admin', { type: 'checkbox' })}
-          />
-  
-          {!form.values.admin && (
-            <Select
-
-              data={[
-                { value: 'Астана', label: 'Астана' },
-              ]}
-
-              placeholder="Қала"
-              label="Қала"
-              required
-              {...form.getInputProps('city')}
-            />
-          )}
-          {!form.values.admin && (
-            <Select
-              data={[
-                { value: 'react', label: 'React' },
-                { value: 'vue', label: 'Vue' },
-                { value: 'ng', label: 'Angular' },
-                { value: 'svelte', label: 'Svelte' },
-              ]}
-              placeholder="Мектеп"
-              label="Мектеп"
-              required
-              {...form.getInputProps('school')}
-            />
-          )}
-
-          <TextInput
-            withAsterisk
-            label="Тегі"
-            {...form.getInputProps('secondName')}
-          />
-
-        <TextInput
-            withAsterisk
-            label="Есімі"
-            {...form.getInputProps('firstName')}
-          />
-  
-          <Group justify="flex-end" mt="md">
-            <Button type="submit">Submit</Button>
-          </Group>
-        </form>
-      </Flex>
-    );
-  };
 
 const Students = () => {
   return <div>Students</div>;

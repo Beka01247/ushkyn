@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { HandleDelete } from "./handleDelete";
 import { useForm } from "@mantine/form";
 import { HandleCreate } from "./handleCreate";
+import { Link } from "react-router-dom";
 
 
 export const ChangeTopics = () => {
@@ -100,7 +101,9 @@ export const ChangeTopics = () => {
 
       {topics.length > 0 && topics.map((topic) => (
         <div key={topic._id}>
-          <Anchor href="https://mantine.dev/" target="_blank" underline="never">{topic.title}</Anchor>
+          <Center>
+          <Anchor component={Link} to="/home" target="/home" underline="never" c={'black'}>{topic.title}</Anchor>
+          </Center>
           <Flex align={'center'} justify={'center'} wrap={'wrap'} gap={'xl'}>
           <Button color='green' onClick={() => {handleSave(topic._id)}}>Save</Button>
           <Button color='blue'>Edit</Button>

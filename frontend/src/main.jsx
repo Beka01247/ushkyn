@@ -13,7 +13,7 @@ import { MantineProvider } from '@mantine/core'
       <AuthContextProvider>
         <TopicContextProvider>
         <MantineProvider withGlobalStyles withNormalizeCSS>
-          <App />
+            <App />
           </MantineProvider>
         </TopicContextProvider>
       </AuthContextProvider>
