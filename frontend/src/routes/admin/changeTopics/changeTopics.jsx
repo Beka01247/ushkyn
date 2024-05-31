@@ -34,7 +34,7 @@ export const ChangeTopics = () => {
       return;
     }
 
-    fetch('http://localhost:4000/api/topics/all-topics', {
+    fetch('http://localhost:4000/api/topics/', {
       headers: {
         'Authorization': `Bearer ${token}`
       }
@@ -97,7 +97,7 @@ export const ChangeTopics = () => {
 
   return (
     <div>
-      {!topics.length && <Loader color="green" />}
+      <Center> {!topics.length && <Loader color="green" />} </Center>
 
       {topics.length > 0 && topics.map((topic) => (
         <div key={topic._id}>

@@ -1,9 +1,15 @@
 export const HandleRegistration = async (values) => {
+  // Construct the new user object
+  const newUser = {
+    phone: values.phone,
+    password: values.password,
+    city: values.city,
+    school: values.school,
+    grade: values.grade,
+    name: values.name
+  };
+
   // Retrieve user data from localStorage
-  const body = JSON.stringify(values)
-
-  console.log(body)
-
   const userString = localStorage.getItem('user');
   if (!userString) {
     console.error('User not found in localStorage');
@@ -19,28 +25,34 @@ export const HandleRegistration = async (values) => {
   }
 
   try {
+    // Make the POST request to the server
     const response = await fetch('http://localhost:4000/api/admin/add-user', {
       method: 'POST',
       headers: {
         'Authorization': 'Bearer ' + token,
+        'Content-Type': 'application/json',
       },
-      body: body
+      body: JSON.stringify(newUser)
     });
 
-    const json = JSON.stringify(response)
+    // Parse the response as JSON
+    const responseData = await response.json();
 
     // Handle non-OK responses
     if (!response.ok) {
-      console.error('Error:', json.error || json.message);
-      return json.error || json.message
+      console.error('Error:', JSON.stringify(responseData.error));
+      return JSON.stringify(responseData.error);
+    }
+
+    // Return the parsed response data
+    if (response.ok){
+      return JSON.stringify(responseData.name + " жүйеге тіркелді!")
     }
     
-    if(response.ok)
-      return json
 
   } catch (error) {
     // Log and return fetch error
     console.error('Fetch error:', error);
-    return 'Fetch error: ' + error.message;
+    return 'Fetch error: ' + JSON.stringify(error.message)
   }
 };

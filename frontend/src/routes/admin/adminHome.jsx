@@ -4,6 +4,7 @@ import { useDisclosure } from '@mantine/hooks';
 import { useForm } from '@mantine/form';
 import { ChangeTopics } from './changeTopics/changeTopics';
 import { Registration } from './registration/registration';
+import { Students } from './students/students';
 
 export default function AdminHome() {
   const [opened, { toggle }] = useDisclosure();
@@ -55,14 +56,3 @@ export default function AdminHome() {
     </AppShell>
   );
 }
-
-
-const Students = () => {
-  return <div>Students</div>;
-};
-const phone = '+77754593399';
-    const password = 'Adnsl38!sD';
-    const school = 'N/A';
-    const city = 'N/A';
-    const grade = 'N/A';
-    const name = 'Beksultan';

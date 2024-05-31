@@ -14,8 +14,7 @@ export const Registration = () => {
     const result = await HandleRegistration(values);
     setRegStatus(result);
     console.log(result)
-    // form.reset();
-    setSubmitted(false);
+    setSubmitted(false)
   };
 
 
@@ -34,7 +33,7 @@ export const Registration = () => {
         if (!value) {
           return 'Нөмір теру міндетті';
         }
-        return /^7\d{10}$/.test(value) ? null : 'Қате нөмір терілді';
+        return /^\+7\d{10}$/.test(value) ? null : 'Қате нөмір терілді';
       },
       password: (value) => (value ? null : 'Пароль теру міндетті'),
       name: (value) => (value ? null : 'Есімін теру міндетті'),
@@ -75,6 +74,7 @@ export const Registration = () => {
         />
 
         <TextInput
+          description="Кем дегенде 8 таңба болу керек: 1 үлкен әріп, 1 кіші әріп, 1 символ, 1 сан"
           disabled={submitted}
           withAsterisk
           label="Пароль"
@@ -128,7 +128,8 @@ export const Registration = () => {
         />
 
         <Group justify="flex-end" mt="md">
-          <Button type="submit" disabled={submitted}>Submit</Button>
+          <Button type="submit" disabled={submitted} color='green'>Тіркеу</Button>
+          <Button disabled={submitted} onClick={() => form.reset()} color='yellow'>Тазарту</Button>
         </Group>
       </form>
     </Flex>
