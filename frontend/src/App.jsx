@@ -9,6 +9,9 @@ import '@mantine/core/styles.css';
 import { MantineProvider } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
 import '@mantine/notifications/styles.css';
+import '@mantine/core/styles.css'; //import Mantine V7 styles needed by MRT
+import '@mantine/dates/styles.css'; //if using mantine date picker features
+import 'mantine-react-table/styles.css'; //import MRT styles
 
 export default function App() {
   const { user } = useAuthContext();
@@ -20,19 +23,15 @@ export default function App() {
         <Routes>
           <Route 
             path="/login_page"
-            element={!user ? <LoginPage /> : <Navigate to="/home" />}
+            element={!user ? <LoginPage /> : <Navigate to="/" />}
           />
           <Route 
             path="/home/*"
             element={user ? <Home /> : <Navigate to="/login_page" />}
           />
           <Route
-            path="/admin"
-            element={user ? <AdminHome /> : <Navigate to="/login_page" />}
-          />
-          <Route
             path="/"
-            element={<AdminHome/>}
+            element={user? <AdminHome /> : <Navigate to="/login_page" />}
           />
           <Route
             path="*"

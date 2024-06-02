@@ -8,6 +8,7 @@ import { TopicContextProvider } from './context/topicContext.jsx'
 import { MantineProvider } from '@mantine/core'
 
 
+
   ReactDOM.createRoot(document.getElementById("root")).render(
 
       <AuthContextProvider>
