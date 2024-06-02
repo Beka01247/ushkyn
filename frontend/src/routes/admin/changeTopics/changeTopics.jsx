@@ -152,13 +152,16 @@ export const ChangeTopics = () => {
         <div key={topic._id}>
           <Center>
             {editingTopicId === topic._id ? (
-              <form onSubmit={form2.onSubmit((values) => handleSave(topic._id, values.newTitle))}>
+              <form onSubmit={form2.onSubmit((values) => handleSave(topic._id, values.newTitle), {
+                onError: (errors) => console.log('Form errors', errors),
+              })}>
                 <TextInput
                   mt={16}
                   size="sm"
                   radius="md"
-                  placeholder="Input placeholder"
+                  placeholder=""
                   {...form2.getInputProps('newTitle')}
+                  required
                 />
                 <Flex align={'center'} justify={'center'} wrap={'wrap'} gap={'xl'} mt={16}>
                   <ActionIcon type="submit" color="green">
@@ -168,7 +171,7 @@ export const ChangeTopics = () => {
                     <IconTrash size={16} />
                   </ActionIcon>
                 </Flex>
-              </form>
+              </form>              
             ) : (
               <Anchor component={Link} to="/home" target="/home" underline="never" c={'black'}>{topic.title}</Anchor>
             )}
@@ -215,13 +218,13 @@ export const ChangeTopics = () => {
       <Modal
         opened={isModalOpen}
         onClose={() => setIsModalOpen(false)}
-        title="Confirm Deletion"
+        title="Өшіру"
       >
         <div>
-          <p>Are you sure you want to delete this topic?</p>
+          <p>Өшіруді растаңыз</p>
           <Flex align={'center'} justify={'center'} wrap={'wrap'} gap={'xl'}>
-            <Button color="red" onClick={() => handleDelete(deleteTopicId)}>Delete</Button>
-            <Button onClick={() => setIsModalOpen(false)}>Cancel</Button>
+            <Button color="red" onClick={() => handleDelete(deleteTopicId)}>Өшіру</Button>
+            <Button onClick={() => setIsModalOpen(false)}>Жоқ, артқа</Button>
           </Flex>
         </div>
       </Modal>
