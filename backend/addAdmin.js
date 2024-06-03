@@ -7,8 +7,13 @@ const addAdmin = async () => {
     await mongoose.connect(process.env.MONG_URI);
     console.log('MongoDB connected');
 
+<<<<<<< HEAD
     const phone = '+77754593399';
     const password = 'Adnsl38!sD';
+=======
+    const phone = '';
+    const password = '';
+>>>>>>> 1d8c48bf693f9270325430353e2a764599e6e14b
     const school = 'N/A';
     const city = 'N/A';
     const grade = 'N/A';
