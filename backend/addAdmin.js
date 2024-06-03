@@ -7,12 +7,12 @@ const addAdmin = async () => {
     await mongoose.connect(process.env.MONG_URI);
     console.log('MongoDB connected');
 
-    const phone = '+77479912620';
-    const password = 'Rais7777.';
+    const phone = '+77754593399';
+    const password = 'Adnsl38!sD';
     const school = 'N/A';
     const city = 'N/A';
     const grade = 'N/A';
-    const name = 'Rais';
+    const name = 'Beksultan';
 
     const existingAdmin = await User.findOne({ phone });
     if (existingAdmin) {
