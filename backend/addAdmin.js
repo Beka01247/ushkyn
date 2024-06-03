@@ -7,8 +7,8 @@ const addAdmin = async () => {
     await mongoose.connect(process.env.MONG_URI);
     console.log('MongoDB connected');
 
-    const phone = '';
-    const password = '';
+    const phone = '+77754593399';
+    const password = 'Adnsl38!sD';
     const school = 'N/A';
     const city = 'N/A';
     const grade = 'N/A';

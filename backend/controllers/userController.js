@@ -1,8 +1,8 @@
 const User = require('../models/userModel')
 const jwt = require('jsonwebtoken')
 
-const createToken = (_id) => {
-  return jwt.sign({_id}, process.env.SECRET, {expiresIn: '3h'});
+const createToken = (_id, isAdmin) => {
+  return jwt.sign({_id}, process.env.SECRET, {expiresIn: isAdmin ? '24h' : '3h'});
 }
 
 exports.getLogin = (req, res, next) => {
@@ -14,7 +14,7 @@ exports.loginUser = async (req, res, next) => {
 
   try {
     const user = await User.login(phone, password);
-    const token = createToken(user._id);
+    const token = createToken(user._id, user.isAdmin);
     res.status(200).json({ phone, token });
   } catch (error) {
     res.status(400).json({ error: error.message });
