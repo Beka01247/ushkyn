@@ -1,6 +1,6 @@
 export const HandleCreate = async (token, topicId, title) => {
     try {
-      // Fetch the existing topic to get current subtopics
+      // Fetch the existing topics to get the current subtopics of the specific topic
       const response = await fetch(`http://localhost:4000/api/topics/`, {
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -10,11 +10,28 @@ export const HandleCreate = async (token, topicId, title) => {
   
       if (!response.ok) {
         const error = await response.json();
-        console.error('Error fetching existing topic:', JSON.stringify(error, null, 2));
-        throw new Error('Failed to fetch existing topic');
+        console.error('Error fetching existing topics:', JSON.stringify(error, null, 2));
+        throw new Error('Failed to fetch existing topics');
       }
   
-      const topics = await response.json();
+      const result = await response.json();
+  
+      // Debugging: Log the response to understand its structure
+      console.log('Fetched topics:', JSON.stringify(result, null, 2));
+  
+      // Access the topics array within the result object
+      const topics = result.topics;
+  
+      // Ensure topics is an array
+      if (!Array.isArray(topics)) {
+        throw new Error('Unexpected response format: topics is not an array');
+      }
+  
+      const topic = topics.find(topic => topic._id === topicId);
+  
+      if (!topic) {
+        throw new Error('Topic not found');
+      }
   
       // Create the new subtopic payload
       const newSubtopic = {
@@ -23,7 +40,7 @@ export const HandleCreate = async (token, topicId, title) => {
       };
   
       // Append the new subtopic to the existing subtopics
-      const updatedSubtopics = [...topics._id.subtopics, newSubtopic];
+      const updatedSubtopics = [...(topic.subtopics || []), newSubtopic];
   
       // Create the payload to update the topic
       const updatedTopic = {
@@ -53,6 +70,7 @@ export const HandleCreate = async (token, topicId, title) => {
   
     } catch (error) {
       console.error('Error during fetch:', error); // Debug log
+      throw error;
     }
   };
   
