@@ -9,7 +9,6 @@ import {
 } from 'mantine-react-table';
 import {
   ActionIcon,
-  Button,
   Flex,
   Stack,
   Text,
@@ -107,19 +106,43 @@ export const Demo = () => {
 
   const { mutateAsync: updateUser } = useMutation({
     mutationFn: async (user) => {
-      await new Promise((resolve) => setTimeout(resolve, 1000)); // fake api call
-      return Promise.resolve();
+      const response = await fetch(`http://localhost:4000/api/admin/edit-users/${user._id}`, {
+        method: 'PUT',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(user),
+      });
+
+      if (!response.ok) {
+        const errorMessage = `Failed to update user. Status: ${response.status}`;
+        console.error(errorMessage);
+        throw new Error(errorMessage);
+      }
+
+      return response.json();
     },
     onMutate: (newUserInfo) => {
-      queryClient.setQueryData(['users'], (prevUsers) => {
-        if (!prevUsers) {
-          console.error('Previous users data is undefined');
-          return [];
-        }
-        return prevUsers.map((prevUser) =>
+      const previousUsers = queryClient.getQueryData(['users']);
+      if (!previousUsers) {
+        return;
+      }
+      queryClient.setQueryData(['users'], (prevUsers) =>
+        prevUsers.map((prevUser) =>
           prevUser._id === newUserInfo._id ? newUserInfo : prevUser,
-        );
-      });
+        ),
+      );
+      return { previousUsers };
+    },
+    onError: (error, newUserInfo, context) => {
+      console.error('Error updating user:', error);
+      if (context?.previousUsers) {
+        queryClient.setQueryData(['users'], context.previousUsers);
+      }
+    },
+    onSettled: () => {
+      queryClient.invalidateQueries(['users']);
     },
   });
 
@@ -140,21 +163,18 @@ export const Demo = () => {
       }
 
       console.log('User deleted successfully:', userId); // Debug log
-      setRefresh(true)
+      setRefresh(true);
     },
     onMutate: async (userId) => {
       await queryClient.cancelQueries(['users']);
-      
       const previousUsers = queryClient.getQueryData(['users']);
       if (!previousUsers) {
         console.error('Previous users data is undefined');
         return { previousUsers: [] };
       }
-      
       queryClient.setQueryData(['users'], (prevUsers) =>
         prevUsers ? prevUsers.filter((user) => user._id !== userId) : []
       );
-      
       return { previousUsers };
     },
     onError: (error, userId, context) => {
@@ -168,14 +188,14 @@ export const Demo = () => {
     },
   });
 
-  const handleSaveUser = async ({ values, table }) => {
+  const handleSaveUser = async ({ row, values, table }) => {
     const newValidationErrors = validateUser(values);
     if (Object.values(newValidationErrors).some((error) => error)) {
       setValidationErrors(newValidationErrors);
       return;
     }
     setValidationErrors({});
-    await updateUser(values);
+    await updateUser({ ...values, _id: row.original._id });
     table.setEditingRow(null); // exit editing mode
   };
 
