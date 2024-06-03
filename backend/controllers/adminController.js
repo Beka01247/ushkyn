@@ -51,6 +51,15 @@ exports.getUsers = async (req, res) => {
   }
 };
 
+exports.updateUser = async (req, res) => {
+  try {
+    const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    res.status(200).json(updatedUser);
+  } catch (error) {
+    res.status(400).json({error: error.message});
+  }
+}
+
 exports.deleteUser = async (req, res) => {
   try {
     await User.findByIdAndDelete(req.params.id);
