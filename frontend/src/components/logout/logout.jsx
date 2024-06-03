@@ -1,4 +1,4 @@
-import { Button } from "antd"
+import { Button } from "@mantine/core"
 import { useLogOut } from "../../hooks/useLogOut"
 
 export const Logout = () => {
@@ -9,6 +9,8 @@ export const Logout = () => {
     }
     
     return(
-        <Button onClick={handleClick}/>
+        <Button onClick={handleClick}> 
+            Шығу
+        </Button>
     )
 }

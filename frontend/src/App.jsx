@@ -9,6 +9,13 @@ import '@mantine/core/styles.css';
 import { MantineProvider } from '@mantine/core';
 import { Notifications } from '@mantine/notifications';
 import '@mantine/notifications/styles.css';
+import '@mantine/core/styles.css'; //import Mantine V7 styles needed by MRT
+import '@mantine/dates/styles.css'; //if using mantine date picker features
+import 'mantine-react-table/styles.css'; //import MRT styles
+import { ChangeTopics } from './routes/admin/changeTopics/changeTopics.jsx';
+import { Subtopics } from './routes/admin/changeTopics/subtopics/subtopics.jsx';
+import { Students } from './routes/admin/students/students.jsx';
+import { Registration } from './routes/admin/registration/registration.jsx'
 
 export default function App() {
   const { user } = useAuthContext();
@@ -20,20 +27,21 @@ export default function App() {
         <Routes>
           <Route 
             path="/login_page"
-            element={!user ? <LoginPage /> : <Navigate to="/home" />}
+            element={!user ? <LoginPage /> : <Navigate to="/" />}
           />
           <Route 
             path="/home/*"
             element={user ? <Home /> : <Navigate to="/login_page" />}
           />
           <Route
-            path="/admin"
-            element={user ? <AdminHome /> : <Navigate to="/login_page" />}
-          />
-          <Route
             path="/"
-            element={<AdminHome/>}
-          />
+            element={user? <AdminHome /> : <Navigate to="/login_page" />}
+          >
+              <Route path="students" element={<Students />} />
+              <Route path="registration" element={<Registration />} />
+              <Route path="change-topics" element={<ChangeTopics />} />
+              <Route path="topic/:id" element={<Subtopics />} />
+        </Route>
           <Route
             path="*"
             element={<ErrorPage />}

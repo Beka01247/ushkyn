@@ -1,0 +1,88 @@
+{
+  "hash": "83a00851",
+  "configHash": "57ab2a3a",
+  "lockfileHash": "cfbb2397",
+  "browserHash": "7ec6fa9c",
+  "optimized": {
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "b1a0f620",
+      "needsInterop": true
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "2b5bd38f",
+      "needsInterop": true
+    },
+    "@mantine/core": {
+      "src": "../../node_modules/@mantine/core/esm/index.mjs",
+      "file": "@mantine_core.js",
+      "fileHash": "b2d16e6e",
+      "needsInterop": false
+    },
+    "react-router-dom": {
+      "src": "../../node_modules/react-router-dom/dist/index.js",
+      "file": "react-router-dom.js",
+      "fileHash": "5e029aab",
+      "needsInterop": false
+    },
+    "@mantine/notifications": {
+      "src": "../../node_modules/@mantine/notifications/esm/index.mjs",
+      "file": "@mantine_notifications.js",
+      "fileHash": "a88d9e16",
+      "needsInterop": false
+    },
+    "antd": {
+      "src": "../../node_modules/antd/es/index.js",
+      "file": "antd.js",
+      "fileHash": "62ff84fa",
+      "needsInterop": false
+    },
+    "@mantine/hooks": {
+      "src": "../../node_modules/@mantine/hooks/esm/index.mjs",
+      "file": "@mantine_hooks.js",
+      "fileHash": "c6100883",
+      "needsInterop": false
+    },
+    "@mantine/form": {
+      "src": "../../node_modules/@mantine/form/esm/index.mjs",
+      "file": "@mantine_form.js",
+      "fileHash": "f11ffc8a",
+      "needsInterop": false
+    },
+    "@ant-design/icons": {
+      "src": "../../node_modules/@ant-design/icons/es/index.js",
+      "file": "@ant-design_icons.js",
+      "fileHash": "7121f06a",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-PE64VZK6": {
+      "file": "chunk-PE64VZK6.js"
+    },
+    "chunk-HUYTQ2T3": {
+      "file": "chunk-HUYTQ2T3.js"
+    },
+    "chunk-LQHJAPLN": {
+      "file": "chunk-LQHJAPLN.js"
+    },
+    "chunk-CRS3CFTV": {
+      "file": "chunk-CRS3CFTV.js"
+    },
+    "chunk-OYP6L5KJ": {
+      "file": "chunk-OYP6L5KJ.js"
+    },
+    "chunk-IYKQXP44": {
+      "file": "chunk-IYKQXP44.js"
+    },
+    "chunk-XFJSCWQC": {
+      "file": "chunk-XFJSCWQC.js"
+    },
+    "chunk-ATZAHYIB": {
+      "file": "chunk-ATZAHYIB.js"
+    }
+  }
+}
