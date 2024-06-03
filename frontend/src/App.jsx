@@ -12,6 +12,10 @@ import '@mantine/notifications/styles.css';
 import '@mantine/core/styles.css'; //import Mantine V7 styles needed by MRT
 import '@mantine/dates/styles.css'; //if using mantine date picker features
 import 'mantine-react-table/styles.css'; //import MRT styles
+import { ChangeTopics } from './routes/admin/changeTopics/changeTopics.jsx';
+import { Subtopics } from './routes/admin/changeTopics/subtopics/subtopics.jsx';
+import { Students } from './routes/admin/students/students.jsx';
+import { Registration } from './routes/admin/registration/registration.jsx'
 
 export default function App() {
   const { user } = useAuthContext();
@@ -32,7 +36,12 @@ export default function App() {
           <Route
             path="/"
             element={user? <AdminHome /> : <Navigate to="/login_page" />}
-          />
+          >
+              <Route path="students" element={<Students />} />
+              <Route path="registration" element={<Registration />} />
+              <Route path="change-topics" element={<ChangeTopics />} />
+              <Route path="topic/:id" element={<Subtopics />} />
+        </Route>
           <Route
             path="*"
             element={<ErrorPage />}

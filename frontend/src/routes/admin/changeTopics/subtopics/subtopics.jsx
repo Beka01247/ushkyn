@@ -1,19 +1,18 @@
-import { Button, Center, Flex, Loader, TextInput, Anchor, ActionIcon, Modal } from "@mantine/core";
+import { Button, Center, Flex, Loader, TextInput, ActionIcon, Modal } from "@mantine/core";
 import { useEffect, useState } from "react";
-import { HandleDelete } from "./handleDelete";
 import { useForm } from "@mantine/form";
-import { HandleCreate } from "./handleCreate";
-import { Link } from "react-router-dom";
-import { IconEdit, IconTrash, IconCheck, IconPlus, IconArrowForward} from '@tabler/icons-react';
-import { useNavigate } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
+import { IconEdit, IconTrash, IconCheck, IconPlus, IconArrowForward } from '@tabler/icons-react';
+import { HandleCreate } from './handleCreate';
 
-
-export const ChangeTopics = () => {
+export const Subtopics = () => {
+  const { id } = useParams();
   const [topics, setTopics] = useState([]);
+  const [subtopics, setSubtopics] = useState([]);
   const [pressedButton, setPressedButton] = useState('');
   const [refresh, setRefresh] = useState(true);
-  const [editingTopicId, setEditingTopicId] = useState(null);
-  const [deleteTopicId, setDeleteTopicId] = useState(null);
+  const [editingSubtopicId, setEditingSubtopicId] = useState(null);
+  const [deleteSubtopicId, setDeleteSubtopicId] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const form = useForm({
@@ -56,6 +55,10 @@ export const ChangeTopics = () => {
         })
         .then(data => {
           setTopics(data.topics);
+          const topic = data.topics.find(t => t._id === id);
+          if (topic) {
+            setSubtopics(topic.subtopics || []);
+          }
           console.log('Fetched topics:', data.topics);
         })
         .catch(error => {
@@ -65,7 +68,7 @@ export const ChangeTopics = () => {
     fetchData();
     setRefresh(false);
     console.log('they called me');
-  }, [refresh]);
+  }, [refresh, id]);
 
   const handleCreateClick = () => {
     setPressedButton('create');
@@ -88,20 +91,20 @@ export const ChangeTopics = () => {
 
     setPressedButton('submit');
     console.log(pressedButton);
-    await HandleCreate(token, values);
+    await HandleCreate(token, id, values.title);
     setRefresh(true);
   };
 
   const handleDelete = async (_id) => {
-    await HandleDelete(_id);
+    // Implement the handle delete functionality for subtopics
     setRefresh(true);
     setIsModalOpen(false);
   };
 
-  const handleEdit = (topic) => {
-    setEditingTopicId(topic._id);
-    form2.setValues({ newTitle: topic.title });
-    setPressedButton('edit')
+  const handleEdit = (subtopic) => {
+    setEditingSubtopicId(subtopic._id);
+    form2.setValues({ newTitle: subtopic.title });
+    setPressedButton('edit');
   };
 
   const handleSave = async (id, newTitle) => {
@@ -120,7 +123,7 @@ export const ChangeTopics = () => {
     }
 
     try {
-      const response = await fetch(`http://localhost:4000/api/admin/edit-topics/${id}`, {
+      const response = await fetch(`http://localhost:4000/api/admin/edit-subtopics/${id}`, {
         method: 'PUT',
         headers: {
           'Content-Type': 'application/json',
@@ -133,9 +136,9 @@ export const ChangeTopics = () => {
         throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const updatedTopic = await response.json();
-      setTopics(topics.map(topic => (topic._id === id ? updatedTopic : topic)));
-      setEditingTopicId(null);
+      const updatedSubtopic = await response.json();
+      setSubtopics(subtopics.map(subtopic => (subtopic._id === id ? updatedSubtopic : subtopic)));
+      setEditingSubtopicId(null);
       setRefresh(true);
     } catch (error) {
       console.error('There was a problem with the update operation:', error);
@@ -143,20 +146,20 @@ export const ChangeTopics = () => {
   };
 
   const openModal = (id) => {
-    setDeleteTopicId(id);
+    setDeleteSubtopicId(id);
     setIsModalOpen(true);
   };
 
   return (
     <div>
-      <Center> {!topics.length && <Loader color="green" />} </Center>
-      <Center> {topics.length === 0  && <p>No topics available</p>} </Center>
+      <Center> {!subtopics.length && <Loader color="green" />} </Center>
+      <Center> {subtopics.length === 0 && <p>No subtopics available</p>} </Center>
 
-      {topics.length > 0 && topics.map((topic) => (
-        <div key={topic._id}>
+      {subtopics.length > 0 && subtopics.map((subtopic) => (
+        <div key={subtopic._id}>
           <Center>
-            {editingTopicId === topic._id ? (
-              <form onSubmit={form2.onSubmit((values) => handleSave(topic._id, values.newTitle), {
+            {editingSubtopicId === subtopic._id ? (
+              <form onSubmit={form2.onSubmit((values) => handleSave(subtopic._id, values.newTitle), {
                 onError: (errors) => console.log('Form errors', errors),
               })}>
                 <TextInput
@@ -171,25 +174,31 @@ export const ChangeTopics = () => {
                   <ActionIcon type="submit" color="green">
                     <IconCheck size={16} />
                   </ActionIcon>
-                  <ActionIcon color="blue" onClick={() => setEditingTopicId(null)}>
+                  <ActionIcon color="blue" onClick={() => setEditingSubtopicId(null)}>
                     <IconArrowForward size={16} />
                   </ActionIcon>
-                  <ActionIcon color="red" onClick={() => openModal(topic._id)}>
+                  <ActionIcon color="red" onClick={() => openModal(subtopic._id)}>
                     <IconTrash size={16} />
                   </ActionIcon>
                 </Flex>
-              </form>              
+              </form>
             ) : (
-                    <Link to={`/topic/${topic._id}`} style={{ textDecoration: 'none', color: 'black' }}>
-                {topic.title}
-              </Link>            )}
+              <div>
+                <p>{subtopic.title}</p>
+                <ul>
+                  {subtopic.subsubtopics && subtopic.subsubtopics.map(subsubtopic => (
+                    <li key={subsubtopic._id}>{subsubtopic.title}</li>
+                  ))}
+                </ul>
+              </div>
+            )}
           </Center>
-          {editingTopicId !== topic._id && (
+          {editingSubtopicId !== subtopic._id && (
             <Flex align={'center'} justify={'center'} wrap={'wrap'} gap={'xl'}>
-              <ActionIcon color="blue" onClick={() => handleEdit(topic)}>
+              <ActionIcon color="blue" onClick={() => handleEdit(subtopic)}>
                 <IconEdit size={16} />
               </ActionIcon>
-              <ActionIcon color="red" onClick={() => openModal(topic._id)}>
+              <ActionIcon color="red" onClick={() => openModal(subtopic._id)}>
                 <IconTrash size={16} />
               </ActionIcon>
             </Flex>
@@ -208,14 +217,13 @@ export const ChangeTopics = () => {
             <form onSubmit={form.onSubmit(handleSubmit)}>
               <TextInput
                 withAsterisk
-                label="Тараудың тақырыбы"
-                placeholder="Тараудың тақырыбы"
+                label="Субтақырып атауы"
+                placeholder="Субтақырып атауы"
                 {...form.getInputProps('title')}
               />
-
               <Center mt={16}>
                 <ActionIcon type="submit" color="green">
-                <IconCheck size={16} />
+                  <IconCheck size={16} />
                 </ActionIcon>
               </Center>
             </form>
@@ -231,7 +239,7 @@ export const ChangeTopics = () => {
         <div>
           <p>Өшіруді растаңыз</p>
           <Flex align={'center'} justify={'center'} wrap={'wrap'} gap={'xl'}>
-            <Button color="red" onClick={() => handleDelete(deleteTopicId)}>Өшіру</Button>
+            <Button color="red" onClick={() => handleDelete(deleteSubtopicId)}>Өшіру</Button>
             <Button onClick={() => setIsModalOpen(false)}>Жоқ, артқа</Button>
           </Flex>
         </div>
