@@ -180,9 +180,9 @@ export const ChangeTopics = () => {
                 </Flex>
               </form>              
             ) : (
-                    <Link to={`/topic/${topic._id}`} style={{ textDecoration: 'none', color: 'black' }}>
-                {topic.title}
-              </Link>            )}
+                    <Link to={`/topic/${topic._id}`} style={{textDecoration: 'none', color: 'black', margin: '16px'}}>
+                      {topic.title}
+                    </Link>)}
           </Center>
           {editingTopicId !== topic._id && (
             <Flex align={'center'} justify={'center'} wrap={'wrap'} gap={'xl'}>
