@@ -10,6 +10,7 @@ router.delete('/del-topics/:id', requireAdmin, adminController.deleteTopic);
 router.post('/add-user', requireAdmin, adminController.addUser);
 router.get('/users', requireAdmin, adminController.getUsers);
 router.delete('/users/:id', requireAdmin, adminController.deleteUser);
+router.put('/edit-users/:id', requireAdmin, adminController.updateUser);
 
 
 
