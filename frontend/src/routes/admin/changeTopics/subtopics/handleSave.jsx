@@ -1,4 +1,18 @@
-export const HandleDelete = async (token, topicId, subtopicId) => {
+export const handleSave = async (subtopicId, newTitle) => {
+    const userString = localStorage.getItem('user');
+    if (!userString) {
+      console.error('User not found in localStorage');
+      return;
+    }
+  
+    const user = JSON.parse(userString);
+    const token = user.token;
+  
+    if (!token) {
+      console.error('Token not found');
+      return;
+    }
+  
     try {
       // Fetch the existing topics to get the current subtopics of the specific topic
       const response = await fetch(`http://localhost:4000/api/topics/`, {
@@ -24,14 +38,16 @@ export const HandleDelete = async (token, topicId, subtopicId) => {
         throw new Error('Unexpected response format: topics is not an array');
       }
   
-      const topic = topics.find(topic => topic._id === topicId);
+      const topic = topics.find(topic => topic._id === id);
   
       if (!topic) {
         throw new Error('Topic not found');
       }
   
-      // Remove the subtopic from the existing subtopics
-      const updatedSubtopics = topic.subtopics.filter(subtopic => subtopic._id !== subtopicId);
+      // Modify the subtopic with the new title
+      const updatedSubtopics = topic.subtopics.map(subtopic => 
+        subtopic._id === subtopicId ? { ...subtopic, title: newTitle } : subtopic
+      );
   
       // Create the payload to update the topic
       const updatedTopic = {
@@ -40,7 +56,7 @@ export const HandleDelete = async (token, topicId, subtopicId) => {
   
       console.log('Sending request with payload:', JSON.stringify(updatedTopic, null, 2)); // Debug log
   
-      const updateResponse = await fetch(`http://localhost:4000/api/admin/edit-topics/${topicId}`, {
+      const updateResponse = await fetch(`http://localhost:4000/api/admin/edit-topics/${id}`, {
         method: 'PUT',
         headers: {
           'Authorization': `Bearer ${token}`,
@@ -57,11 +73,11 @@ export const HandleDelete = async (token, topicId, subtopicId) => {
   
       const data = await updateResponse.json();
       console.log('Server response:', JSON.stringify(data, null, 2)); // Debug log
-      return data;
-  
+      setSubtopics(data.subtopics); // Update the state with the new subtopics
+      setEditingSubtopicId(null);
+      setRefresh(true);
     } catch (error) {
-      console.error('Error during fetch:', error); // Debug log
-      throw error;
+      console.error('There was a problem with the update operation:', error);
     }
   };
   
