@@ -2,7 +2,7 @@ import { Button, Center, Flex, Loader, TextInput, ActionIcon, Modal } from "@man
 import { useEffect, useState } from "react";
 import { useForm } from "@mantine/form";
 import { useParams } from "react-router-dom";
-import { IconEdit, IconTrash, IconCheck, IconPlus, IconArrowForward, IconDots } from '@tabler/icons-react';
+import { IconEdit, IconTrash, IconCheck, IconPlus, IconArrowForward } from '@tabler/icons-react';
 import { HandleCreate } from './handleCreate';
 import { HandleDelete } from "./handleDelete";
 import { Accordion, Box, Group, Text } from "@mantine/core";
@@ -30,6 +30,7 @@ export const Subtopics = () => {
   const [pressedButton, setPressedButton] = useState('');
   const [refresh, setRefresh] = useState(true);
   const [editingSubtopicId, setEditingSubtopicId] = useState(null);
+  const [editingSubSubtopicId, setEditingSubSubtopicId] = useState(null)
   const [deleteSubtopicId, setDeleteSubtopicId] = useState(null);
   const [deleteSubSubtopicId, setDeleteSubSubtopicId] = useState(null)
   const [isModalOpen, setIsModalOpen] = useState(false);
@@ -130,27 +131,16 @@ export const Subtopics = () => {
     setIsModalOpen(false);
   };
 
-  const handleEdit = (subtopic) => {
-    setEditingSubtopicId(subtopic._id);
-    form2.setValues({ newTitle: subtopic.title });
+  const handleEdit = (subtopic, event, subsubtopic) => {
+    event.stopPropagation();
+    !subsubtopic && setEditingSubtopicId(subtopic._id);
+    subsubtopic && setEditingSubSubtopicId(subsubtopic._id);
+    !subsubtopic && form2.setValues({ newTitle: subtopic.title });
+    subsubtopic && form2.setValues({ newTitle: subsubtopic.title });
     setPressedButton('edit');
   };
 
-  const handleSave = async (subtopicId, newTitle) => {
-    const userString = localStorage.getItem('user');
-    if (!userString) {
-      console.error('User not found in localStorage');
-      return;
-    }
-
-    const user = JSON.parse(userString);
-    const token = user.token;
-
-    if (!token) {
-      console.error('Token not found');
-      return;
-    }
-
+  const handleSave = async (subtopicId, newTitle, subsubtopicId) => {
     try {
       const response = await fetch(`http://localhost:4000/api/topics/`, {
         headers: {
@@ -158,60 +148,95 @@ export const Subtopics = () => {
           'Content-Type': 'application/json',
         }
       });
-
+  
       if (!response.ok) {
         const error = await response.json();
         console.error('Error fetching existing topics:', JSON.stringify(error, null, 2));
         throw new Error('Failed to fetch existing topics');
       }
-
+  
       const result = await response.json();
       const topics = result.topics;
-
-      if (!Array.isArray(topics)) {
-        throw new Error('Unexpected response format: topics is not an array');
-      }
-
       const topic = topics.find(topic => topic._id === id);
-
-      if (!topic) {
-        throw new Error('Topic not found');
+  
+      if (subsubtopicId) {
+        const subtopic = topic.subtopics.find(subtopic => subtopic._id === subtopicId);
+        const updatedSubsubtopics = subtopic.subsubtopics.map(subsubtopic =>
+          subsubtopic._id === subsubtopicId ? { ...subsubtopic, title: newTitle } : subsubtopic
+        );
+  
+        const updatedSubtopic = {
+          ...subtopic,
+          subsubtopics: updatedSubsubtopics
+        };
+  
+        const updatedSubtopics = topic.subtopics.map(subtopic =>
+          subtopic._id === subtopicId ? updatedSubtopic : subtopic
+        );
+  
+        const updatedTopic = {
+          subtopics: updatedSubtopics
+        };
+  
+        console.log('Sending request with payload:', JSON.stringify(updatedTopic, null, 2));
+  
+        const updateResponse = await fetch(`http://localhost:4000/api/admin/edit-topics/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(updatedTopic),
+        });
+  
+        if (!updateResponse.ok) {
+          const error = await updateResponse.json();
+          console.error('Error response from server:', JSON.stringify(error, null, 2));
+          throw new Error('Server responded with an error');
+        }
+  
+        const data = await updateResponse.json();
+        console.log('Server response:', JSON.stringify(data, null, 2));
+        setSubtopics(data.subtopics);
+        setEditingSubSubtopicId(null);
+        setRefresh(true);
+      } else {
+        const updatedSubtopics = topic.subtopics.map(subtopic =>
+          subtopic._id === subtopicId ? { ...subtopic, title: newTitle } : subtopic
+        );
+  
+        const updatedTopic = {
+          subtopics: updatedSubtopics
+        };
+  
+        console.log('Sending request with payload:', JSON.stringify(updatedTopic, null, 2));
+  
+        const updateResponse = await fetch(`http://localhost:4000/api/admin/edit-topics/${id}`, {
+          method: 'PUT',
+          headers: {
+            'Authorization': `Bearer ${token}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(updatedTopic),
+        });
+  
+        if (!updateResponse.ok) {
+          const error = await updateResponse.json();
+          console.error('Error response from server:', JSON.stringify(error, null, 2));
+          throw new Error('Server responded with an error');
+        }
+  
+        const data = await updateResponse.json();
+        console.log('Server response:', JSON.stringify(data, null, 2));
+        setSubtopics(data.subtopics);
+        setEditingSubtopicId(null);
+        setRefresh(true);
       }
-
-      const updatedSubtopics = topic.subtopics.map(subtopic => 
-        subtopic._id === subtopicId ? { ...subtopic, title: newTitle } : subtopic
-      );
-
-      const updatedTopic = {
-        subtopics: updatedSubtopics
-      };
-
-      console.log('Sending request with payload:', JSON.stringify(updatedTopic, null, 2));
-
-      const updateResponse = await fetch(`http://localhost:4000/api/admin/edit-topics/${id}`, {
-        method: 'PUT',
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(updatedTopic),
-      });
-
-      if (!updateResponse.ok) {
-        const error = await updateResponse.json();
-        console.error('Error response from server:', JSON.stringify(error, null, 2));
-        throw new Error('Server responded with an error');
-      }
-
-      const data = await updateResponse.json();
-      console.log('Server response:', JSON.stringify(data, null, 2));
-      setSubtopics(data.subtopics);
-      setEditingSubtopicId(null);
-      setRefresh(true);
     } catch (error) {
       console.error('There was a problem with the update operation:', error);
     }
   };
+  
 
   const openModal = (topicId, subtopicId, subsubtopicId) => {
     setDeleteSubSubtopicId(subsubtopicId)
@@ -231,13 +256,35 @@ export const Subtopics = () => {
             <Accordion.Item key={subtopic._id} value={subtopic._id}>
               <Accordion.Control style={{backgroundColor: '#C5C8D6'}}>
                 <Flex align={'center'} justify={'left'} wrap={'wrap'} gap={'x2'}>
-                  <ActionIcon onClick={() => handleEdit(subtopic)} m={12}>
+                  <ActionIcon onClick={(event) => handleEdit(subtopic, event)} m={12}>
                     <IconEdit size={16} />
                   </ActionIcon>
-                  <ActionIcon color="red" onClick={() => openModal(id, subtopic._id)} m={12}>
+                  <ActionIcon color="red" onClick={(event) => { event.stopPropagation(); openModal(id, subtopic._id); }} m={12}>
                     <IconTrash size={16} />
                   </ActionIcon>
-                  <p>{subtopic.title}</p>
+                      {editingSubtopicId === subtopic._id ? (
+                        <form onSubmit={form2.onSubmit((values) => handleSave(subtopic._id, values.newTitle), {
+                          onError: (errors) => console.log('Form errors', errors),
+                        })}>
+                        <TextInput
+                          mt={16}
+                          size="sm"
+                          radius="md"
+                          placeholder=""
+                          {...form2.getInputProps('newTitle')}
+                          required
+                        />
+                        <Flex align={'center'} justify={'center'} wrap={'wrap'} gap={'xl'} mt={16}>
+                          <ActionIcon type="submit" color="green" onClick={(event) => event.stopPropagation()}>
+                            <IconCheck size={16} />
+                          </ActionIcon>
+                          <ActionIcon color="blue" onClick={(event) => {setEditingSubtopicId(null); event.stopPropagation()}}>
+                            <IconArrowForward size={16} />
+                          </ActionIcon>
+                        </Flex>
+                      </form>
+                  ):
+                  (<p>{subtopic.title}</p>)}
                 </Flex>
               </Accordion.Control>
               <Accordion.Panel>
@@ -246,11 +293,33 @@ export const Subtopics = () => {
                     <Accordion.Item value={subsubtopic._id}>
                       <Accordion.Control>
                       <Flex align={'center'} justify={'right'} wrap={'wrap'} gap={'x3'}>
-                          <Text>{subsubtopic.title}</Text>
-                          <ActionIcon color="blue" onClick={() => handleEdit(subsubtopic)} m={12}>
+                      {editingSubSubtopicId === subsubtopic._id ? (
+                        <form onSubmit={form2.onSubmit((values) => handleSave(subtopic._id, values.newTitle, subsubtopic._id), {
+                          onError: (errors) => console.log('Form errors', errors),
+                        })}>
+                        <TextInput
+                          mt={16}
+                          size="sm"
+                          radius="md"
+                          placeholder=""
+                          {...form2.getInputProps('newTitle')}
+                          required
+                        />
+                        <Flex align={'center'} justify={'center'} wrap={'wrap'} gap={'xl'} mt={16}>
+                          <ActionIcon type="submit" color="green" onClick={(event) => event.stopPropagation()}>
+                            <IconCheck size={16} />
+                          </ActionIcon>
+                          <ActionIcon color="blue" onClick={(event) => {setEditingSubSubtopicId(null); event.stopPropagation()}}>
+                            <IconArrowForward size={16} />
+                          </ActionIcon>
+                        </Flex>
+                      </form>
+                  ):
+                  (<p>{subsubtopic.title}</p>)}
+                          <ActionIcon color="blue" onClick={(event) => handleEdit(subtopic, event, subsubtopic)} m={12}>
                             <IconEdit size={16} />
                           </ActionIcon>
-                          <ActionIcon color="red" onClick={() => openModal(id, subtopic._id, subsubtopic._id)} m={12}>
+                          <ActionIcon color="red" onClick={(event) => { event.stopPropagation(); openModal(id, subtopic._id, subsubtopic._id); }} m={12}>
                             <IconTrash size={16} />
                           </ActionIcon>
                         </Flex>
