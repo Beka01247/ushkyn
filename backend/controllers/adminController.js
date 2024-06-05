@@ -37,7 +37,7 @@ exports.addUser = async (req, res) => {
   try {
     const user = await User.signup(phone, password, school, city, grade, name);
     res.status(200).json(user);
-  } catch (err) { 
+  } catch (error) { 
     res.status(400).json({error: error.message});
   }
 }
