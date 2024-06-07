@@ -251,7 +251,7 @@ export const Subtopics = () => {
       <Center> {subtopics.length === 0 && <p>No subtopics available</p>} </Center>
 
       {subtopics.length > 0 && (
-        <Accordion multiple>
+        <Accordion >
           {subtopics.map((subtopic) => (
             <Accordion.Item key={subtopic._id} value={subtopic._id}>
               <Accordion.Control style={{backgroundColor: '#C5C8D6'}}>

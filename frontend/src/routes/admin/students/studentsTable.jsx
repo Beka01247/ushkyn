@@ -1,6 +1,6 @@
 import '@mantine/core/styles.css';
-import '@mantine/dates/styles.css'; // if using mantine date picker features
-import 'mantine-react-table/styles.css'; // make sure MRT styles were imported in your app root (once)
+import '@mantine/dates/styles.css';
+import 'mantine-react-table/styles.css';
 import { useEffect, useMemo, useState } from 'react';
 import {
   MRT_EditActionButtons,
@@ -16,7 +16,7 @@ import {
   Tooltip,
 } from '@mantine/core';
 import { ModalsProvider, modals } from '@mantine/modals';
-import { IconEdit, IconTrash } from '@tabler/icons-react';
+import { IconEdit, IconTrash, IconKey } from '@tabler/icons-react';
 import {
   QueryClient,
   QueryClientProvider,
@@ -98,6 +98,14 @@ export const Demo = () => {
         header: 'Бан',
         Cell: ({ cell }) => JSON.stringify(cell.getValue()),
       },
+      {
+        accessorKey: 'password',
+        header: 'Password',
+        mantineEditTextInputProps: {
+          type: 'password',
+        },
+        visible: false,
+      },
     ],
     [validationErrors],
   );
@@ -148,7 +156,7 @@ export const Demo = () => {
 
   const { mutateAsync: deleteUser } = useMutation({
     mutationFn: async (userId) => {
-      console.log('Attempting to delete user with id:', userId); // Debug log
+      console.log('Attempting to delete user with id:', userId);
       const response = await fetch(`http://localhost:4000/api/admin/users/${userId}`, {
         method: 'DELETE',
         headers: {
@@ -162,7 +170,7 @@ export const Demo = () => {
         throw new Error(errorMessage);
       }
 
-      console.log('User deleted successfully:', userId); // Debug log
+      console.log('User deleted successfully:', userId);
       setRefresh(true);
     },
     onMutate: async (userId) => {
@@ -205,7 +213,7 @@ export const Demo = () => {
       console.error('Invalid user id for deletion');
       return;
     }
-    console.log('Opening delete confirm modal for user:', row.original.name); // Debug log
+    console.log('Opening delete confirm modal for user:', row.original.name);
     modals.openConfirmModal({
       title: 'Are you sure you want to delete this user?',
       children: (
@@ -225,8 +233,8 @@ export const Demo = () => {
   const table = useMantineReactTable({
     columns,
     data: users,
-    createDisplayMode: 'modal', // default ('row', and 'custom' are also available)
-    editDisplayMode: 'modal', // default ('row', 'cell', 'table', and 'custom' are also available)
+    createDisplayMode: 'modal',
+    editDisplayMode: 'modal',
     enableEditing: true,
     getRowId: (row) => row._id,
     onEditingRowCancel: () => setValidationErrors({}),
@@ -247,6 +255,11 @@ export const Demo = () => {
             <IconEdit />
           </ActionIcon>
         </Tooltip>
+        <Tooltip label="Password">
+          <ActionIcon onClick={() => openPasswordEditModal(row)}>
+            <IconKey />
+          </ActionIcon>
+        </Tooltip>
         <Tooltip label="Delete">
           <ActionIcon color="red" onClick={() => openDeleteConfirmModal(row)}>
             <IconTrash />
@@ -255,6 +268,40 @@ export const Demo = () => {
       </Flex>
     ),
   });
+
+  const openPasswordEditModal = (row) => {
+    const userId = row.original._id;
+    modals.openConfirmModal({
+      title: 'Update Password',
+      children: (
+        <Stack>
+          <Text>Жаңа пароль теріңіз {row.original.name} үшін</Text>
+          <input type="password" id="new-password" placeholder="New Password" />
+          <Text id="password-error" color="red" size="sm"></Text>
+        </Stack>
+      ),
+      labels: { confirm: 'Сақтау', cancel: 'Қайтару' },
+      closeOnConfirm: false, // Prevent modal from closing on confirm
+      onConfirm: async () => {
+        const newPassword = document.getElementById('new-password').value;
+        const errorElement = document.getElementById('password-error');
+        const passwordError = validatePassword(newPassword);
+        setRefresh(true)
+
+        if (passwordError) {
+          errorElement.textContent = passwordError;
+        } else {
+          errorElement.textContent = '';
+          try {
+            await updateUser({ ...row.original, password: newPassword });
+            modals.closeAll(); // Close all modals on successful update
+          } catch (error) {
+            console.error('Error updating password:', error);
+          }
+        }
+      },
+    });
+  };
 
   return <MantineReactTable table={table} />;
 };
@@ -272,16 +319,28 @@ const DemoWithProviders = () => (
 export default DemoWithProviders;
 
 const validateRequired = (value) => !!value.length;
-const validateEmail = (email) =>
-  !!email.length &&
-  email
-    .toLowerCase()
-    .match(
-      /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/,
-    );
+
+const validatePassword = (password) => {
+  if (!validateRequired(password)) {
+    return 'Password is required';
+  }
+  if (password.length < 8) {
+    return 'Password must be at least 8 characters long';
+  }
+  if (!/[A-Z]/.test(password)) {
+    return 'Password must contain at least one uppercase letter';
+  }
+  if (!/[0-9]/.test(password)) {
+    return 'Password must contain at least one number';
+  }
+  if (!/[!@#$%^&*(),.?":{}|<>]/.test(password)) {
+    return 'Password must contain at least one symbol';
+  }
+  return '';
+};
 
 function validateUser(user) {
   return {
-    name: !validateRequired(user.name) ? 'Name is Required' : '',
+    name: !validateRequired(user.name) ? 'Есімін теру міндетті' : '',
   };
 }

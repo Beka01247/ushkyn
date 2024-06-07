@@ -1,0 +1,118 @@
+{
+  "hash": "3800b443",
+  "configHash": "57ab2a3a",
+  "lockfileHash": "8e97f53a",
+  "browserHash": "3c16a18c",
+  "optimized": {
+    "react": {
+      "src": "../../node_modules/react/index.js",
+      "file": "react.js",
+      "fileHash": "4a5919ab",
+      "needsInterop": true
+    },
+    "react-dom/client": {
+      "src": "../../node_modules/react-dom/client.js",
+      "file": "react-dom_client.js",
+      "fileHash": "f512e998",
+      "needsInterop": true
+    },
+    "@mantine/core": {
+      "src": "../../node_modules/@mantine/core/esm/index.mjs",
+      "file": "@mantine_core.js",
+      "fileHash": "9c077e46",
+      "needsInterop": false
+    },
+    "react-router-dom": {
+      "src": "../../node_modules/react-router-dom/dist/index.js",
+      "file": "react-router-dom.js",
+      "fileHash": "fc9a679a",
+      "needsInterop": false
+    },
+    "@mantine/notifications": {
+      "src": "../../node_modules/@mantine/notifications/esm/index.mjs",
+      "file": "@mantine_notifications.js",
+      "fileHash": "16491c64",
+      "needsInterop": false
+    },
+    "antd": {
+      "src": "../../node_modules/antd/es/index.js",
+      "file": "antd.js",
+      "fileHash": "e2cbc031",
+      "needsInterop": false
+    },
+    "@mantine/hooks": {
+      "src": "../../node_modules/@mantine/hooks/esm/index.mjs",
+      "file": "@mantine_hooks.js",
+      "fileHash": "3caa3935",
+      "needsInterop": false
+    },
+    "@mantine/form": {
+      "src": "../../node_modules/@mantine/form/esm/index.mjs",
+      "file": "@mantine_form.js",
+      "fileHash": "f1e3730e",
+      "needsInterop": false
+    },
+    "@ant-design/icons": {
+      "src": "../../node_modules/@ant-design/icons/es/index.js",
+      "file": "@ant-design_icons.js",
+      "fileHash": "60063935",
+      "needsInterop": false
+    },
+    "@tabler/icons-react": {
+      "src": "../../node_modules/@tabler/icons-react/dist/esm/tabler-icons-react.mjs",
+      "file": "@tabler_icons-react.js",
+      "fileHash": "ec31b4c6",
+      "needsInterop": false
+    },
+    "@tanstack/react-query": {
+      "src": "../../node_modules/@tanstack/react-query/build/modern/index.js",
+      "file": "@tanstack_react-query.js",
+      "fileHash": "0eaaccd7",
+      "needsInterop": false
+    },
+    "mantine-react-table": {
+      "src": "../../node_modules/mantine-react-table/dist/index.esm.mjs",
+      "file": "mantine-react-table.js",
+      "fileHash": "3dcc5cdb",
+      "needsInterop": false
+    },
+    "@mantine/modals": {
+      "src": "../../node_modules/@mantine/modals/esm/index.mjs",
+      "file": "@mantine_modals.js",
+      "fileHash": "2ebb8e08",
+      "needsInterop": false
+    }
+  },
+  "chunks": {
+    "chunk-URLRDX2X": {
+      "file": "chunk-URLRDX2X.js"
+    },
+    "chunk-F6YLG7IS": {
+      "file": "chunk-F6YLG7IS.js"
+    },
+    "chunk-RVCDVWEE": {
+      "file": "chunk-RVCDVWEE.js"
+    },
+    "chunk-XKNC3ECD": {
+      "file": "chunk-XKNC3ECD.js"
+    },
+    "chunk-BAE5ZEMG": {
+      "file": "chunk-BAE5ZEMG.js"
+    },
+    "chunk-LQHJAPLN": {
+      "file": "chunk-LQHJAPLN.js"
+    },
+    "chunk-FQXRACN4": {
+      "file": "chunk-FQXRACN4.js"
+    },
+    "chunk-CRS3CFTV": {
+      "file": "chunk-CRS3CFTV.js"
+    },
+    "chunk-VSK6FCDQ": {
+      "file": "chunk-VSK6FCDQ.js"
+    },
+    "chunk-M47QXNUA": {
+      "file": "chunk-M47QXNUA.js"
+    }
+  }
+}
