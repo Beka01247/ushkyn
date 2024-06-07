@@ -6,5 +6,6 @@ const router = express.Router();
 
 // all topics
 router.get('/', topicController.getTopics);
+router.get('/:id', topicController.getTopicsById)
 
 module.exports = router;
