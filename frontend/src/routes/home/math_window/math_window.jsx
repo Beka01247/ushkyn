@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import "./math_window_style.css";
 import Section from "./section/section";
 import { useNavigate } from 'react-router-dom';
-import { Flex } from 'antd';
+import { Flex } from '@mantine/core';
 
 export default function Math_window() {
   const [topics, setTopics] = useState(null);

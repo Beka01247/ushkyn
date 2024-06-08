@@ -3,7 +3,6 @@ import downarrow from './assets/down-arrow.png'
 import './Header.css'
 import { useAuthContext } from "../../hooks/useAuthContext"
 import { Logout } from "../logout/logout"
-import {Col, Layout, Menu, Row, theme} from 'antd'
 
 import {
   MailOutlined,
