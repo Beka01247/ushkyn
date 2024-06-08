@@ -2,7 +2,7 @@ import { useLogIn } from "../../../hooks/useLogIn"
 import "./LoginStyle.css"
 import { useState} from "react"
 import Button from "./Button"
-import { Alert } from "antd";
+import { Alert } from "@mantine/core"
 
 export default function LoginInput () {
     const [phone, setPhone] = useState('');

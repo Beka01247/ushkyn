@@ -1,4 +1,4 @@
-import { Button, Center, Flex, Loader, TextInput, ActionIcon, Modal } from "@mantine/core";
+import { Button, Center, Flex, Loader, TextInput, ActionIcon, Modal, AccordionControl, AccordionItem } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { useForm } from "@mantine/form";
 import { useParams } from "react-router-dom";
@@ -8,6 +8,8 @@ import { HandleDelete } from "./handleDelete";
 import { Accordion, Box, Group, Text } from "@mantine/core";
 import { SubSubHandleCreate } from "./subsubtopicsHandler/subSubHandleCreate";
 import { SubSubHandleDelete } from "./subsubtopicsHandler/subSubHandleDelete";
+import { Test } from "./test and video/test";
+import { Video } from "./test and video/video";
 
 export const Subtopics = () => {
     const userString = localStorage.getItem('user');
@@ -325,7 +327,12 @@ export const Subtopics = () => {
                         </Flex>
                       </Accordion.Control>
                       <Accordion.Panel>
-                            
+                        <Accordion key={subsubtopic._id} multiple>
+                              <Flex justify={'right'} gap={12}>
+                                <Test subsubtopic={subsubtopic}/>
+                                <Video/>  
+                              </Flex>  
+                          </Accordion>
                       </Accordion.Panel>
 
                       

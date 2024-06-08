@@ -16,6 +16,9 @@ import { ChangeTopics } from './routes/admin/changeTopics/changeTopics.jsx';
 import { Subtopics } from './routes/admin/changeTopics/subtopics/subtopics.jsx';
 import { Students } from './routes/admin/students/students.jsx';
 import { Registration } from './routes/admin/registration/registration.jsx'
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
+
+const queryClient = new QueryClient();
 
 export default function App() {
   const { user } = useAuthContext();
@@ -23,6 +26,7 @@ export default function App() {
   return (
     <MantineProvider withNormalizeCSS withGlobalStyles>
       <Notifications position="bottom-right" zIndex={1000} />
+      <QueryClientProvider client={queryClient}>
       <BrowserRouter>
         <Routes>
           <Route 
@@ -48,6 +52,7 @@ export default function App() {
           />
         </Routes>
       </BrowserRouter> 
+      </QueryClientProvider>
     </MantineProvider>
   );
 }
