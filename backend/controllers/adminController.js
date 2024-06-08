@@ -1,6 +1,7 @@
 const Topic = require('../models/topicModel')
 const User = require('../models/userModel')
 const jwt = require('jsonwebtoken')
+const bcrypt = require('bcrypt')
 
 exports.createTopic = async (req, res) => {
   try {
@@ -53,7 +54,12 @@ exports.getUsers = async (req, res) => {
 
 exports.updateUser = async (req, res) => {
   try {
-    const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
+    let updatedFields = req.body;
+    if (updatedFields.password) {
+      const salt = await bcrypt.genSalt(10);
+      updatedFields.password = await bcrypt.hash(updatedFields.password, salt);
+    }
+    const updatedUser = await User.findByIdAndUpdate(req.params.id, updatedFields, { new: true });
     res.status(200).json(updatedUser);
   } catch (error) {
     res.status(400).json({error: error.message});
