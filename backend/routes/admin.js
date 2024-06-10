@@ -11,7 +11,9 @@ router.post('/add-user', requireAdmin, adminController.addUser);
 router.get('/users', requireAdmin, adminController.getUsers);
 router.delete('/users/:id', requireAdmin, adminController.deleteUser);
 router.put('/edit-users/:id', requireAdmin, adminController.updateUser);
-
-
+router.put('/edit-topics/:topicId/subtopics/:subtopicId/subsubtopic/:subsubtopicId/tests/:testId', adminController.updateQuestionName);
+router.put('/edit-topics/:topicId/subtopics/:subtopicId/subsubtopic/:subsubtopicId/tests/:testId/options/:optionId', adminController.updateTestOption);
+router.post('/topics/:topicId/subtopics/:subtopicId/subsubtopic/:subsubtopicId/addTest', adminController.addNewTest);
+router.post('/topics/:topicId/subtopics/:subtopicId/subsubtopic/:subsubtopicId/tests/:testId/addOption', adminController.addNewOption);
 
 module.exports = router;
