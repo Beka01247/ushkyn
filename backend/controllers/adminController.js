@@ -20,7 +20,104 @@ exports.updateTopic = async (req, res) => {
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
+}; 
+
+exports.updateQuestionName = async (req, res) => {
+  const { topicId, subtopicId, subsubtopicId, testId } = req.params;
+  const updatePath = `subtopics.$[subtopic].subsubtopics.$[subsubtopic].tests.$[test].${req.body.fieldToUpdate}`;
+  
+  try {
+    const updatedTopic = await Topic.findByIdAndUpdate(topicId, {
+      $set: {
+        [updatePath]: req.body.newValue
+      }
+    }, {
+      new: true,
+      arrayFilters: [
+        { "subtopic._id": subtopicId },
+        { "subsubtopic._id": subsubtopicId },
+        { "test._id": testId }
+      ]
+    });
+
+    res.status(200).json(updatedTopic);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
 };
+
+exports.updateTestOption = async (req, res) => {
+  const { topicId, subtopicId, subsubtopicId, testId, optionId } = req.params;
+  const updateFieldPath = `subtopics.$[subtopic].subsubtopics.$[subsubtopic].tests.$[test].options.$[option].${req.body.fieldToUpdate}`;
+
+  try {
+    const updatedTopic = await Topic.findByIdAndUpdate(topicId, {
+      $set: {
+        [updateFieldPath]: req.body.newValue
+      }
+    }, {
+      new: true,
+      arrayFilters: [
+        { "subtopic._id": subtopicId },
+        { "subsubtopic._id": subsubtopicId },
+        { "test._id": testId },
+        { "option._id" : optionId}
+      ]
+    });
+
+    res.status(200).json(updatedTopic);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+exports.addNewTest = async (req, res) => {
+  const { topicId, subtopicId, subsubtopicId } = req.params; 
+  const { newTest } = req.body;
+
+  try {
+    const updatedTopic = await Topic.findByIdAndUpdate(topicId, {
+      $push: {
+        [`subtopics.$[subtopic].subsubtopics.$[subsubtopic].tests`]: newTest
+      }
+    }, {
+      new: true,
+      arrayFilters: [
+        { "subtopic._id": subtopicId },
+        { "subsubtopic._id": subsubtopicId }
+      ]
+    });
+
+    res.status(200).json(updatedTopic);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+exports.addNewOption = async (req, res) => {
+  const { topicId, subtopicId, subsubtopicId, testId } = req.params;
+  const { newOption } = req.body;  
+
+  try {
+    const updatedTopic = await Topic.findByIdAndUpdate(topicId, {
+      $push: {
+        [`subtopics.$[subtopic].subsubtopics.$[subsubtopic].tests.$[test].options`]: newOption
+      }
+    }, {
+      new: true,
+      arrayFilters: [
+        { "subtopic._id": subtopicId },
+        { "subsubtopic._id": subsubtopicId },
+        { "test._id": testId }
+      ]
+    });
+
+    res.status(200).json(updatedTopic);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 
 
 exports.deleteTopic = async (req, res) => {
