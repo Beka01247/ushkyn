@@ -172,3 +172,55 @@ exports.deleteUser = async (req, res) => {
   }
 };
 
+exports.deleteTest = async (req, res) => {
+  const { topicId, subtopicId, subsubtopicId, testId } = req.params;
+
+  try {
+    const updatedTopic = await Topic.findByIdAndUpdate(topicId, {
+      $pull: {
+        [`subtopics.$[subtopic].subsubtopics.$[subsubtopic].tests`]: { _id: testId }
+      }
+    }, {
+      new: true,
+      arrayFilters: [
+        { "subtopic._id": subtopicId },
+        { "subsubtopic._id": subsubtopicId }
+      ]
+    });
+
+    if (!updatedTopic) {
+      return res.status(404).json({ message: 'No topic found with the given ID or test not found within the topic.' });
+    }
+
+    res.status(200).json(updatedTopic);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+exports.deleteTestOption = async (req, res) => {
+  const {topicId, subtopicId, subsubtopicId, testId, optionId} = req.params;
+
+  try {
+    const updatedTest = await Topic.findByIdAndUpdate(topicId, {
+      $pull: {
+        ['subtopics.$[subtopic].subsubtopics.$[subsubtopic].tests.$[test].options']: {_id: optionId}
+      }
+    }, {
+      new: true,
+      arrayFilters: [
+        { "subtopic._id": subtopicId },
+        { "subsubtopic._id": subsubtopicId },
+        { "test._id": testId}
+      ]
+    });
+    
+    if (!updatedTest) {
+      return res.status(404).json({ message: 'No option found.' });
+    }
+
+    res.status(200).json(updatedTest);
+  } catch (error) {
+    res.status(200).json({error: error.message});
+  }
+};
