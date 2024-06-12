@@ -1,160 +1,199 @@
-import { useDisclosure } from '@mantine/hooks';
-import { Modal, Button, Group, Text, Radio, RadioGroup, Flex, Input, TextInput, ActionIcon, Checkbox } from '@mantine/core';
-import React, { useState } from 'react';
-import { useForm } from '@mantine/form';
-import { ArrowLeftOutlined, ArrowRightOutlined, SendOutlined } from '@ant-design/icons';
-import { IconArrowBack, IconArrowRight, IconArrowRightCircle, IconClearAll, IconClearFormatting, IconDisabled, IconPlus, IconSend, IconTextWrapDisabled } from '@tabler/icons-react';
+  import { useDisclosure } from '@mantine/hooks';
+  import { Modal, Button, Group, Text, Radio, RadioGroup, Flex, Input, TextInput, ActionIcon, Checkbox, Select} from '@mantine/core';
+  import React, { useState} from 'react';
+  import { useForm } from '@mantine/form';
+  import { ArrowLeftOutlined, ArrowRightOutlined, SendOutlined } from '@ant-design/icons';
+  import { IconArrowBack, IconArrowRight, IconArrowRightCircle, IconClearAll, IconClearFormatting, IconDisabled, IconPlus, IconSend, IconTextWrapDisabled } from '@tabler/icons-react';
+  import { TestHandleCreate } from './testHandleCreate';
+  import { CreateOptions } from './createOptions';
 
 
-export const Test = ({ subsubtopic }) => {
-  const [opened, { close, open }] = useDisclosure(false);
-  const [currentTestIndex, setCurrentTestIndex] = useState(0);
-  const [pressedButton, setPressedButton] = useState(null)
+  export const Test = ({token, topicId, subtopicId, subsubtopic, refreshchild}) => {
+    const [opened, { close, open }] = useDisclosure(false);
+    const [currentTestIndex, setCurrentTestIndex] = useState(0);
+    const [pressedButton, setPressedButton] = useState(null)
+    const [editing, setEditing] = useState(false)
 
-  const form = useForm({
-    mode: 'uncontrolled',
-    initialValues: {
-      question: '',
-    },
+    // console.log('topicId: ', topicId, subtopicId, subsubtopic._id, token)
 
-    validate: {
-      question: (value) => (value ? null : 'Invalid'),
-    },
-  });
+    const form = useForm({
+      mode: 'uncontrolled',
+      initialValues: {
+        question: '',
+        type: ''
+      },
+
+      validate: {
+        question: (value) => (value ? null : 'Invalid'),
+        type: (value) => (value ? null : 'Invalid')
+      },
+    });
+
+    const createOptions = useForm(
+      {
+        mode: 'uncontrolled',
+        initialValues: {
+          option: '',
+          isCorrect: false
+        },
+        validate: {
+          option: (value) => (value ? null : 'Invalid')
+        },
+      }
+    )
+
+    const handleFormSubmit = (values) => {
+      console.log(values);
+      TestHandleCreate(values, topicId, subtopicId, subsubtopic._id, token)
+      form.reset();
+      refreshchild(true)
+    };
+
+    const handleCreateOptions = (values, testId) => { 
+      console.log(values);
+      CreateOptions(values, topicId, subtopicId, subsubtopic._id, testId, token)
+      form.reset();
+    };
 
 
-  const handleNext = () => {
-    if (currentTestIndex < subsubtopic.tests.length - 1) {
-      setCurrentTestIndex(currentTestIndex + 1);
-    }
-  };
+    const handleAddNewQuestion = (value) => {
+      setPressedButton('addQuestion')
+    };
 
-  const handlePrevious = () => {
-    if (currentTestIndex > 0) {
-      setCurrentTestIndex(currentTestIndex - 1);
-    }
-  };
+    return (
+      <>
+        <Button onClick={open}>
+          Тест
+        </Button>
 
-  const handleAddNewQuestion = (value) => {
-    setPressedButton('addQuestion')
-    console.log(value)
-  };
-
-  const currentTest = subsubtopic.tests[currentTestIndex];
-
-  return (
-    <>
-      <Button onClick={open}>
-        Тест
-      </Button>
-
-      <Modal opened={opened} onClose={close} size="auto" title={`Тест: ${subsubtopic.title}.`}>
-        {subsubtopic.tests.length > 0 ? (
-          <>
-            <Group direction="column" mt="md">
-              <div key={currentTest._id}>
-                <Flex align="center" mb="xs">
-                  <Text weight={500} mr="xs">{currentTestIndex + 1}.</Text>
-                  <Text>{currentTest.question}</Text>
-                </Flex>
-                <RadioGroup>
-                  {currentTest.options.map((option, optionIndex) => (
-                    <Checkbox m={'xs'} key={optionIndex} value={option.text} label={option.text} />
-                  ))}
-                </RadioGroup>
-                {/* New Test Option */}
+        <Modal opened={opened} onClose={close} size="auto" title={`Тест: ${subsubtopic.title}.`}>
+          {subsubtopic.tests.length > 0 ? (
+            <>
+              <Flex direction="column" mt="md">
                 {
-                    pressedButton === 'newOption' ? (
-                        <>
-                            <Flex>
-                                <Checkbox m={'xs'}>
+                  subsubtopic.tests.map((test, currentTest) =>(
+                    
+                <div key={test._id}>
+                  <Flex align="center" mb="xs">
+                    <Text weight={500} mr="xs">{currentTest + 1}.</Text>
+                    <Text>{test.question}</Text>
+                  </Flex>
+                  <RadioGroup>
+                    {test.options.map((option, optionIndex) => (
+                      <Checkbox m={'xs'} key={optionIndex} value={option.text} label={option.text} disabled = {!editing} defaultChecked={option.isCorrect}/>
+                    ))}
+                  </RadioGroup>
+                  
+                  {/* New Test Option */}
+                  {
+                      pressedButton === currentTest && (test.type !== 'single-answer' || test.options.length <= 0 ) ? (
+                          <>
+                              <Flex>
+                                <form onSubmit={
+                                  createOptions.onSubmit((values) => {
+                                    handleCreateOptions(values, test._id)
+                                    refreshchild(true)
+                                  })}
+                                  >
+                                  <Checkbox 
+                                  {...createOptions.getInputProps('isCorrect')}
+                                  label={'Бұл жауап дұрыс болса, толтырманы басыңыз'}
+                                  m={'xs'}>
+                                  </Checkbox>
+                                  <TextInput 
+                                  {...createOptions.getInputProps('option')}
+                                  m={'xs'}>
+                                  </TextInput>
+                                  <Flex justify={'center'}>
+                                    <button type='submit' style={{ background: 'none', border: 'none', padding: 0 }}>
+                                      <ActionIcon>                                                           
+                                          <SendOutlined/>
+                                      </ActionIcon>
+                                    </button>
+                                    <ActionIcon 
+                                    m={'xs'} 
+                                    onClick={() => {
+                                        setPressedButton('cancel')
+                                    }}>
+                                        <IconArrowBack/>
+                                    </ActionIcon>
+                                  </Flex>
+                                </form>
+                              </Flex>
+                          </>
+                      )
+                      : (test.type !== 'single-answer' || test.options.length <= 0 ) && (
+                          <ActionIcon m={'xs'} onClick={() => setPressedButton(currentTest)}>
+                              <IconPlus></IconPlus>
+                          </ActionIcon>
+                      )
+                  }
+                  
+                </div>
+                ))
+              }
+              </Flex>
 
-                                </Checkbox>
-                                <Input m={'xs'}>
-                                </Input>
-                            </Flex>
-                            <Flex>
-                                <ActionIcon 
-                                m={'xs'} 
-                                onClick={() => {
-                                    setPressedButton('cancel')
-                                }}>
-                                    <IconArrowBack/>
-                                </ActionIcon>
-                                <ActionIcon 
-                                m={'xs'} 
-                                onClick={() => {
-                                    setPressedButton('submit')
-                                    console.log('submit')
-                                }}>                                                                                         
-                                    <SendOutlined/>
-                                </ActionIcon>
-                            </Flex>
-                        </>
-                    )
-                    : (
-                        <ActionIcon m={'xs'} onClick={() => setPressedButton('newOption')}>
-                            <IconPlus></IconPlus>
-                        </ActionIcon>
-                    )
-                }
-                
-              </div>
-            </Group>
 
+
+  {/* INPUT IF ADD QUESITION WAS PRESSED*/}
+              
+            </>
+          ) : (
+            <Text>No questions available.</Text>
+          )}
+
+          {
+              pressedButton === 'addQuestion' &&
+              <> 
+              <Flex justify={'left'}>
+                  <Flex direction={'column'} align={'center'}>
+                          <Flex mt={12} align={'center'}>
+                          <form onSubmit={form.onSubmit(handleFormSubmit)}>
+                            <Select
+                              {...form.getInputProps('type')}
+                              m="xs"
+                              data={[
+                                { value: 'multiple-choice', label: 'Көп вариантты сұрақ' },
+                                { value: 'single-choice', label: 'Бір вариантты сұрақ' },
+                                { value: 'single-answer', label: 'Ашық сұрақ' }
+                              ]}
+                              placeholder="Тип"
+                              label="Сұрақтың типін таңдаңыз:"
+                            />
+                            <TextInput
+                              label='Сұрақ:'
+                              m={'xs'}
+                              key={form.key('question')}
+                              {...form.getInputProps('question')}
+                            />
+                            <Flex align={'center'} justify={'center'}>
+                              <button type="submit" style={{ background: 'none', border: 'none', padding: 0 }}>
+                                <ActionIcon type="submit" m={12}>
+                                  <SendOutlined />
+                                </ActionIcon>
+                              </button>
+
+                              <ActionIcon onClick={() => setPressedButton('cancel')} m={12} color='yellow'> 
+                                <IconArrowBack/>
+                              </ActionIcon>
+                            </Flex>
+                          </form>
+                      </Flex>
+                  </Flex>
+                  
+              </Flex>
+              </>
+          }
+
+          {(
             <Group mt="xl" position="center">
-              <Button onClick={handleNext} disabled={currentTestIndex === subsubtopic.tests.length - 1}>
-                Next
+              <Button onClick={handleAddNewQuestion}>
+                Add New Question
               </Button>
             </Group>
-
-
-
-{/* INPUT IF ADD QUESITION WAS PRESSED*/}
-            
-          </>
-        ) : (
-          <Text>No questions available.</Text>
-        )}
-
-        {
-            pressedButton === 'addQuestion' &&
-            <> 
-            <Flex justify={'left'}>
-                <Flex direction={'column'} align={'center'}>
-                        <Flex mt={12} align={'center'}>
-                        <form onSubmit={form.onSubmit((values) => 
-                            {console.log(values)
-                            form.disabled}
-                        )
-                        }>
-                            <TextInput 
-                            key={form.key('question')}
-                            {...form.getInputProps('question')}>
-                            </TextInput>
-                        </form>
-                    </Flex>
-                    <Flex>
-                        <ActionIcon onClick={() => setPressedButton('submit')} mt={12}> 
-                            <SendOutlined/>
-                        </ActionIcon>
-                    </Flex>
-                </Flex>
-                <ActionIcon onClick={() => setPressedButton('cancel')} m={15.5} color='yellow'> 
-                            <IconArrowBack/>
-                </ActionIcon>
-            </Flex>
-            </>
-        }
-
-        {(
-          <Group mt="xl" position="center">
-            <Button onClick={handleAddNewQuestion}>
-              Add New Question
-            </Button>
-          </Group>
-        )}
-      </Modal>
-    </>
-  );
-};
+          )}
+        </Modal>
+      </>
+    );
+  };

@@ -263,7 +263,7 @@ export const Subtopics = () => {
                   <ActionIcon onClick={(event) => handleEdit(subtopic, event)} m={12}>
                     <IconEdit size={16} />
                   </ActionIcon>
-                  <ActionIcon color="red" onCl ick={(event) => { event.stopPropagation(); openModal(id, subtopic._id); }} m={12}>
+                  <ActionIcon color="red" onClick={(event) => { event.stopPropagation(); openModal(id, subtopic._id); }} m={12}>
                     <IconTrash size={16} />
                   </ActionIcon>
                       {editingSubtopicId === subtopic._id ? (
@@ -331,7 +331,7 @@ export const Subtopics = () => {
                       <Accordion.Panel>
                         <Accordion key={subsubtopic._id} multiple>
                               <Flex justify={'right'} gap={12}>
-                                <Test subsubtopic={subsubtopic}/>
+                                <Test token={token} topicId={id} subtopicId={subtopic._id} subsubtopic={subsubtopic} refreshchild={setRefresh} />
                                 <Video/>  
                               </Flex>  
                           </Accordion>
