@@ -11,7 +11,11 @@ router.post('/add-user', requireAdmin, adminController.addUser);
 router.get('/users', requireAdmin, adminController.getUsers);
 router.delete('/users/:id', requireAdmin, adminController.deleteUser);
 router.put('/edit-users/:id', requireAdmin, adminController.updateUser);
-
-
+router.put('/edit-topics/:topicId/subtopics/:subtopicId/subsubtopic/:subsubtopicId/tests/:testId', requireAdmin, adminController.updateQuestionName);
+router.put('/edit-topics/:topicId/subtopics/:subtopicId/subsubtopic/:subsubtopicId/tests/:testId/options/:optionId', requireAdmin, adminController.updateTestOption);
+router.post('/topics/:topicId/subtopics/:subtopicId/subsubtopic/:subsubtopicId/addTest',requireAdmin, adminController.addNewTest);
+router.post('/topics/:topicId/subtopics/:subtopicId/subsubtopic/:subsubtopicId/tests/:testId/addOption', requireAdmin, adminController.addNewOption);
+router.delete('/topics/:topicId/subtopics/:subtopicId/subsubtopic/:subsubtopicId/tests/:testId/delete', requireAdmin, adminController.deleteTest);
+router.delete('/topics/:topicId/subtopics/:subtopicId/subsubtopic/:subsubtopicId/tests/:testId/options/:optionId/delete', requireAdmin, adminController.deleteTestOption);
 
 module.exports = router;
