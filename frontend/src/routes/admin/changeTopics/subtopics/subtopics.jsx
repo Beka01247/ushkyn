@@ -2,7 +2,7 @@ import { Button, Center, Flex, Loader, TextInput, ActionIcon, Modal, AccordionCo
 import { useEffect, useState } from "react";
 import { useForm } from "@mantine/form";
 import { useParams } from "react-router-dom";
-import { IconEdit, IconTrash, IconCheck, IconPlus, IconArrowForward } from '@tabler/icons-react';
+import { IconEdit, IconTrash, IconCheck, IconPlus, IconArrowForward, IconArrowBack } from '@tabler/icons-react';
 import { HandleCreate } from './handleCreate';
 import { HandleDelete } from "./handleDelete";
 import { Accordion, Box, Group, Text } from "@mantine/core";
@@ -10,6 +10,7 @@ import { SubSubHandleCreate } from "./subsubtopicsHandler/subSubHandleCreate";
 import { SubSubHandleDelete } from "./subsubtopicsHandler/subSubHandleDelete";
 import { Test } from "./test and video/test";
 import { Video } from "./test and video/video";
+import { useNavigate } from "react-router-dom";
 
 export const Subtopics = () => {
     const userString = localStorage.getItem('user');
@@ -37,6 +38,7 @@ export const Subtopics = () => {
   const [deleteSubSubtopicId, setDeleteSubSubtopicId] = useState(null)
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [targetTopicId, setTargetTopicId] = useState(null);
+  const navigate = useNavigate()
 
   const form = useForm({
     initialValues: {
@@ -261,7 +263,7 @@ export const Subtopics = () => {
                   <ActionIcon onClick={(event) => handleEdit(subtopic, event)} m={12}>
                     <IconEdit size={16} />
                   </ActionIcon>
-                  <ActionIcon color="red" onClick={(event) => { event.stopPropagation(); openModal(id, subtopic._id); }} m={12}>
+                  <ActionIcon color="red" onCl ick={(event) => { event.stopPropagation(); openModal(id, subtopic._id); }} m={12}>
                     <IconTrash size={16} />
                   </ActionIcon>
                       {editingSubtopicId === subtopic._id ? (
@@ -378,6 +380,9 @@ export const Subtopics = () => {
           <IconPlus size={16} />
         </ActionIcon>
       </Flex>
+      <Flex align={'center'} justify={'left'} wrap={'wrap'} gap={'xl'} mt={32}> 
+          <Button color="pink" onClick={() => navigate(-1)}>Артқа</Button>
+      </Flex>
       <Flex align={'center'} justify={'center'} wrap={'wrap'} gap={'xl'} mt={16}>
         {pressedButton === 'create' && (
           <Center>
@@ -389,8 +394,11 @@ export const Subtopics = () => {
                 {...form.getInputProps('title')}
               />
               <Center mt={16}>
-                <ActionIcon type="submit" color="green">
+                <ActionIcon type="submit" color="green" m={'xs'}>
                   <IconCheck size={16} />
+                </ActionIcon>
+                <ActionIcon onClick={() => setPressedButton('cancel')} m={'xs'}>
+                  <IconArrowBack/>
                 </ActionIcon>
               </Center>
             </form>
