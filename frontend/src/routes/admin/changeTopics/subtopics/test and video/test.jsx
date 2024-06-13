@@ -40,6 +40,7 @@ import { CreateOptions } from "./createOptions";
 import { DeleteOption } from "./deleteOption";
 import { DeleteQuestion } from "./deleteQuestion";
 import { EditQuestion } from "./editQuestion";
+import { CreateSingleAnswer } from "./createSingleAnswer";
 
 export const Test = ({
   token,
@@ -54,6 +55,7 @@ export const Test = ({
   const [editing, setEditing] = useState(false);
   const [editingQuestion, setEditingQuestion] = useState(null);
   const [editedQuestionText, setEditedQuestionText] = useState("");
+  const [isFormVisible, setFormVisible] = useState(true);
 
   // console.log('topicId: ', topicId, subtopicId, subsubtopic._id, token)
 
@@ -81,17 +83,46 @@ export const Test = ({
     },
   });
 
+  const createSingleAnswer = useForm({
+    mode: "uncontrolled",
+    initialValues: {
+      singleCorrectAnswer: "", // This should match the field used in the TextInput component
+    },
+    validate: {
+      singleCorrectAnswer: (value) => (value ? null : "Answer required"),
+    },
+  });
+
   const handleFormSubmit = async (values) => {
     await TestHandleCreate(values, topicId, subtopicId, subsubtopic._id, token);
     refreshchild(true);
     form.reset();
-    console.log("refresh");
+    refreshchild(true);
   };
 
   const handleCreateOptions = (values, testId) => {
     console.log(values);
     CreateOptions(values, topicId, subtopicId, subsubtopic._id, testId, token);
     form.reset();
+  };
+
+  const handleCreateSingleCorrectAnswer = async (values, testId) => {
+    console.log("Handling creation with values:", values);
+    try {
+      const result = await CreateSingleAnswer(
+        values.singleCorrectAnswer, // Correct field name here
+        topicId,
+        subtopicId,
+        subsubtopic._id,
+        testId,
+        token
+      );
+      setFormVisible(false); // Hide form on success
+      refreshchild(true);
+      createSingleAnswer.reset(); // Make sure this reset call is correctly referring to the form instance
+    } catch (error) {
+      console.error("Error creating single correct answer:", error);
+    }
   };
 
   const deleteOption = async (testId, optionId) => {
@@ -241,22 +272,27 @@ export const Test = ({
                         <Text>There are no options yet.</Text>
                       </Flex>
                     )
-                  ) : (
+                  ) : test.singleCorrectAnswer ? (
                     <Flex style={{ alignItems: "center", gap: "10px" }}>
                       <Text>Дұрыс жауабы: </Text>
                       <Text style={{ color: "grey" }}>
                         {test.singleCorrectAnswer}
                       </Text>
-                      <ActionIcon m={"xs"}>
+                      <ActionIcon color="red" m={"xs"}>
                         <IconTrash />
                       </ActionIcon>
+                    </Flex>
+                  ) : (
+                    <Flex style={{ alignItems: "center", gap: "10px" }}>
+                      <Text style={{ color: "red" }}>
+                        Дұрыс жауапты енгізіңіз!
+                      </Text>
                     </Flex>
                   )}
 
                   {/* New Test Option */}
                   {pressedButton === currentTest &&
-                  (test.type !== "single-answer" ||
-                    test.options.length <= 0) ? (
+                  test.type !== "single-answer" ? (
                     <>
                       <Flex>
                         <form
@@ -299,16 +335,61 @@ export const Test = ({
                         </form>
                       </Flex>
                     </>
+                  ) : pressedButton === currentTest &&
+                    test.type === "single-answer" &&
+                    !test.singleCorrectAnswer ? (
+                    <>
+                      <Flex>
+                        {isFormVisible && (
+                          <form
+                            onSubmit={createSingleAnswer.onSubmit((values) => {
+                              handleCreateSingleCorrectAnswer(values, test._id);
+                              // Optionally, close the form right here if you are sure the submission will succeed
+                            })}
+                          >
+                            <TextInput
+                              {...createSingleAnswer.getInputProps(
+                                "singleCorrectAnswer"
+                              )}
+                              m={"xs"}
+                              placeholder="Enter the single correct answer"
+                            />
+                            <Flex justify={"center"}>
+                              <button
+                                type="submit"
+                                style={{
+                                  background: "none",
+                                  border: "none",
+                                  padding: 0,
+                                }}
+                              >
+                                <ActionIcon>
+                                  <SendOutlined />
+                                </ActionIcon>
+                              </button>
+                              <ActionIcon
+                                m={"xs"}
+                                onClick={() => {
+                                  setPressedButton("cancel"); // Additional actions if needed
+                                }}
+                              >
+                                <IconArrowBack />
+                              </ActionIcon>
+                            </Flex>
+                          </form>
+                        )}
+                      </Flex>
+                    </>
+                  ) : test.type === "single-answer" &&
+                    test.singleCorrectAnswer ? (
+                    <div></div>
                   ) : (
-                    (test.type !== "single-answer" ||
-                      test.singleCorrectAnswer.length <= 0) && (
-                      <ActionIcon
-                        m={"xs"}
-                        onClick={() => setPressedButton(currentTest)}
-                      >
-                        <IconPlus></IconPlus>
-                      </ActionIcon>
-                    )
+                    <ActionIcon
+                      m={"xs"}
+                      onClick={() => setPressedButton(currentTest)}
+                    >
+                      <IconPlus></IconPlus>
+                    </ActionIcon>
                   )}
                 </div>
               ))}
