@@ -3,9 +3,11 @@
   import React, { useState} from 'react';
   import { useForm } from '@mantine/form';
   import { ArrowLeftOutlined, ArrowRightOutlined, SendOutlined } from '@ant-design/icons';
-  import { IconArrowBack, IconArrowRight, IconArrowRightCircle, IconClearAll, IconClearFormatting, IconDisabled, IconPlus, IconSend, IconTextWrapDisabled } from '@tabler/icons-react';
+  import { IconArrowBack, IconArrowRight, IconArrowRightCircle, IconClearAll, IconClearFormatting, IconDisabled, IconEdit, IconPlus, IconSend, IconTextWrapDisabled, IconTrash } from '@tabler/icons-react';
   import { TestHandleCreate } from './testHandleCreate';
   import { CreateOptions } from './createOptions';
+  import { DeleteOption } from './deleteOption';
+  import { DeleteQuestion } from './deleteQuestion';
 
 
   export const Test = ({token, topicId, subtopicId, subsubtopic, refreshchild}) => {
@@ -42,11 +44,11 @@
       }
     )
 
-    const handleFormSubmit = (values) => {
-      console.log(values);
-      TestHandleCreate(values, topicId, subtopicId, subsubtopic._id, token)
-      form.reset();
+    const handleFormSubmit = async (values) => {
+      await TestHandleCreate(values, topicId, subtopicId, subsubtopic._id, token)
       refreshchild(true)
+      form.reset();
+      console.log('refresh')
     };
 
     const handleCreateOptions = (values, testId) => { 
@@ -55,10 +57,20 @@
       form.reset();
     };
 
+    const deleteOption = async (testId, optionId) => {
+      await DeleteOption(token, topicId, subtopicId, subsubtopic._id, testId, optionId)
+      refreshchild(true)  
+    }
+
 
     const handleAddNewQuestion = (value) => {
       setPressedButton('addQuestion')
     };
+
+    const deleteQuestion = async (testId) => {
+      await DeleteQuestion(token, topicId, subtopicId, subsubtopic._id, testId)
+      refreshchild(true)  
+    }
 
     return (
       <>
@@ -66,7 +78,7 @@
           Тест
         </Button>
 
-        <Modal opened={opened} onClose={close} size="auto" title={`Тест: ${subsubtopic.title}.`}>
+        <Modal opened={opened} onClose={close} size="md" title={`Тест: ${subsubtopic.title}.`}>
           {subsubtopic.tests.length > 0 ? (
             <>
               <Flex direction="column" mt="md">
@@ -77,10 +89,21 @@
                   <Flex align="center" mb="xs">
                     <Text weight={500} mr="xs">{currentTest + 1}.</Text>
                     <Text>{test.question}</Text>
+                    <ActionIcon m={'xs'}>
+                      <IconEdit/>  
+                    </ActionIcon>
+                    <ActionIcon color='red' onClick={() => deleteQuestion(test._id)}>
+                      <IconTrash/>  
+                    </ActionIcon>
                   </Flex>
                   <RadioGroup>
                     {test.options.map((option, optionIndex) => (
-                      <Checkbox m={'xs'} key={optionIndex} value={option.text} label={option.text} disabled = {!editing} defaultChecked={option.isCorrect}/>
+                      <Flex key={optionIndex}>
+                        <Checkbox m={'xs'} key={optionIndex} value={option.text} label={option.text} disabled = {!editing} defaultChecked={option.isCorrect}/>
+                        <ActionIcon color='red' onClick={() => deleteOption(test._id, option._id)}>
+                          <IconTrash/>  
+                        </ActionIcon>
+                      </Flex>
                     ))}
                   </RadioGroup>
                   
