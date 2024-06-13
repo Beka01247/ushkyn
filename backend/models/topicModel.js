@@ -19,6 +19,7 @@ const TestSchema = new Schema({
   },
   singleCorrectAnswer: {
     type: String,
+    default: "Осы жерді дұрыс жауапқа өзгертініз!",
     required: function() { return this.type === 'single-answer'; }
   },
   videoExplanation: String,

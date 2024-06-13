@@ -2,7 +2,7 @@ import { Button, Center, Flex, Loader, TextInput, ActionIcon, Modal, AccordionCo
 import { useEffect, useState } from "react";
 import { useForm } from "@mantine/form";
 import { useParams } from "react-router-dom";
-import { IconEdit, IconTrash, IconCheck, IconPlus, IconArrowForward, IconArrowBack } from '@tabler/icons-react';
+import { IconEdit, IconTrash, IconCheck, IconPlus, IconVideo, IconArrowForward, IconArrowBack } from '@tabler/icons-react';
 import { HandleCreate } from './handleCreate';
 import { HandleDelete } from "./handleDelete";
 import { Accordion, Box, Group, Text } from "@mantine/core";
