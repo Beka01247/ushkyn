@@ -1,35 +1,43 @@
-const mongoose = require('mongoose');
+const mongoose = require("mongoose");
 const { Schema } = mongoose;
 
 const TestOptionSchema = new Schema({
   text: String,
-  isCorrect: Boolean
+  isCorrect: Boolean,
 });
 
 const TestSchema = new Schema({
   question: String,
   type: {
     type: String,
-    enum: ['multiple-choice', 'single-answer', 'single-choice'],
-    default: 'multiple-choice'
+    enum: ["multiple-choice", "single-answer", "single-choice"],
+    default: "multiple-choice",
   },
   options: {
     type: [TestOptionSchema],
-    required: function() { return this.type === 'multiple-choice' || this.type === 'single-choice'; }
+    required: function () {
+      return this.type === "multiple-choice" || this.type === "single-choice";
+    },
   },
   singleCorrectAnswer: {
     type: String,
-    required: function() { return this.type === 'single-answer'; }
+    required: function () {
+      return this.type === "single-answer";
+    },
   },
   videoExplanation: String,
-  textExplanation: String
+  textExplanation: String,
 });
 
-TestSchema.pre('save', function(next) {
-  if (this.type === 'single-choice') {
-    const correctCount = this.options.filter(option => option.isCorrect).length;
+TestSchema.pre("save", function (next) {
+  if (this.type === "single-choice") {
+    const correctCount = this.options.filter(
+      (option) => option.isCorrect
+    ).length;
     if (correctCount !== 1) {
-      next(new Error('Single-choice test must have exactly one correct option.'));
+      next(
+        new Error("Single-choice test must have exactly one correct option.")
+      );
     }
   }
   next();
@@ -38,19 +46,19 @@ TestSchema.pre('save', function(next) {
 const SubsubtopicSchema = new Schema({
   title: String,
   videos: [String],
-  tests: [TestSchema]
+  tests: [TestSchema],
 });
 
 const SubtopicSchema = new Schema({
   title: String,
-  subsubtopics: [SubsubtopicSchema]
+  subsubtopics: [SubsubtopicSchema],
 });
 
 const TopicSchema = new Schema({
   title: String,
-  subtopics: [SubtopicSchema]
+  subtopics: [SubtopicSchema],
 });
 
-const Topic = mongoose.model('Topic', TopicSchema);
+const Topic = mongoose.model("Topic", TopicSchema);
 
 module.exports = Topic;
