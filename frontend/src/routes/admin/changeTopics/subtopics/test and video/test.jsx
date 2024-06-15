@@ -41,6 +41,10 @@ import { DeleteOption } from "./deleteOption";
 import { DeleteQuestion } from "./deleteQuestion";
 import { EditQuestion } from "./editQuestion";
 import { CreateSingleAnswer } from "./createSingleAnswer";
+import { CreateVideo } from "./createVideo";
+import { CreateText } from "./createText";
+import { DeleteText } from "./deleteText";
+import { DeleteVideo } from "./deleteVideo";
 
 export const Test = ({
   token,
@@ -56,8 +60,13 @@ export const Test = ({
   const [editingQuestion, setEditingQuestion] = useState(null);
   const [editedQuestionText, setEditedQuestionText] = useState("");
   const [isFormVisible, setFormVisible] = useState(true);
-
-  // console.log('topicId: ', topicId, subtopicId, subsubtopic._id, token)
+  const [videoModalOpened, setVideoModalOpened] = useState(false);
+  const [videoUrl, setVideoUrl] = useState("");
+  const [textModalOpened, setTextModalOpened] = useState(false);
+  const [textExp, setTextExp] = useState("");
+  const [currentTextExplanation, setCurrentTextExplanation] = useState("");
+  const [currentVideo, setCurrentVideo] = useState("");
+  const [currentTestId, setCurrentTestId] = useState(null);
 
   const form = useForm({
     mode: "uncontrolled",
@@ -137,6 +146,31 @@ export const Test = ({
     refreshchild(true);
   };
 
+  const deleteText = async () => {
+    console.log("Deleting text exp with id" + currentTestId);
+    await DeleteText(
+      token,
+      topicId,
+      subtopicId,
+      subsubtopic._id,
+      currentTestId
+    );
+    refreshchild(true);
+    setTextModalOpened(false);
+  };
+
+  const deleteVideo = async () => {
+    await DeleteVideo(
+      token,
+      topicId,
+      subtopicId,
+      subsubtopic._id,
+      currentTestId
+    );
+    refreshchild(true);
+    setVideoModalOpened(false);
+  };
+
   const startEditQuestion = (testId, currentText) => {
     setEditingQuestion(testId);
     setEditedQuestionText(currentText);
@@ -155,6 +189,64 @@ export const Test = ({
     setEditingQuestion(null);
     setEditedQuestionText("");
     refreshchild(true);
+  };
+
+  const openVideoModal = (testId) => {
+    setCurrentTestId(testId);
+    setVideoModalOpened(true);
+  };
+
+  const handleVideoSubmit = async () => {
+    console.log(
+      "Submitting Video URL:",
+      videoUrl,
+      "for Test ID:",
+      currentTestId
+    );
+    if (currentTestId) {
+      await CreateVideo(
+        videoUrl,
+        topicId,
+        subtopicId,
+        subsubtopic._id,
+        currentTestId,
+        token
+      );
+      setVideoUrl("");
+      setVideoModalOpened(false);
+      refreshchild(true);
+    } else {
+      console.error("Test ID is not set.");
+    }
+  };
+
+  const openTextModal = (testId) => {
+    setCurrentTestId(testId);
+    setTextModalOpened(true);
+  };
+
+  const handleTextSubmit = async () => {
+    console.log(
+      "Submitting text exp.:",
+      textExp,
+      "for Test ID:",
+      currentTestId
+    );
+    if (currentTestId) {
+      await CreateText(
+        textExp,
+        topicId,
+        subtopicId,
+        subsubtopic._id,
+        currentTestId,
+        token
+      );
+      setTextExp("");
+      setTextModalOpened(false);
+      refreshchild(true);
+    } else {
+      console.error("Test ID is not set.");
+    }
   };
 
   const handleAddNewQuestion = (value) => {
@@ -230,10 +322,25 @@ export const Test = ({
                         >
                           <IconEdit />
                         </ActionIcon>
-                        <ActionIcon color="green">
+                        <ActionIcon
+                          color="green"
+                          onClick={() => {
+                            setCurrentVideo(test.videoExplanation);
+                            setVideoModalOpened(true);
+                            setCurrentTestId(test._id);
+                          }}
+                        >
                           <IconVideo />
                         </ActionIcon>
-                        <ActionIcon m={"xs"} color="yellow">
+                        <ActionIcon
+                          m={"xs"}
+                          color="yellow"
+                          onClick={() => {
+                            setCurrentTextExplanation(test.textExplanation);
+                            setTextModalOpened(true);
+                            setCurrentTestId(test._id);
+                          }}
+                        >
                           <IconBlockquote />
                         </ActionIcon>
                         <ActionIcon
@@ -344,7 +451,6 @@ export const Test = ({
                           <form
                             onSubmit={createSingleAnswer.onSubmit((values) => {
                               handleCreateSingleCorrectAnswer(values, test._id);
-                              // Optionally, close the form right here if you are sure the submission will succeed
                             })}
                           >
                             <TextInput
@@ -464,6 +570,66 @@ export const Test = ({
             <Button onClick={handleAddNewQuestion}>Add New Question</Button>
           </Group>
         }
+      </Modal>
+
+      {/* modal for video */}
+      <Modal
+        opened={videoModalOpened}
+        onClose={() => setVideoModalOpened(false)}
+        title="Видео түрінде түсіндіру"
+      >
+        {currentVideo ? (
+          <>
+            <Text>Қазіргі видео: {currentVideo}</Text>
+            <ActionIcon
+              color="red"
+              mt="10px"
+              onClick={() => {
+                deleteVideo();
+              }}
+            >
+              <IconTrash />
+            </ActionIcon>
+          </>
+        ) : (
+          <>
+            <Text>Қазір видео түсіндіру жоқ. Видео түсіндірме қосыныз!</Text>
+            <TextInput
+              style={{ marginTop: "10px", marginBottom: "10px" }}
+              placeholder="Видеоға ссылка"
+              value={videoUrl}
+              onChange={(e) => setVideoUrl(e.target.value)}
+            />
+            <Button onClick={handleVideoSubmit}>Submit Video</Button>
+          </>
+        )}
+      </Modal>
+
+      {/* modal for text */}
+      <Modal
+        opened={textModalOpened}
+        onClose={() => setTextModalOpened(false)}
+        title="Мәтін түрінде түсіндіру"
+      >
+        {currentTextExplanation ? (
+          <>
+            <Text>Қазіргі мәтін: {currentTextExplanation}</Text>
+            <ActionIcon color="red" mt="10px" onClick={() => deleteText()}>
+              <IconTrash />
+            </ActionIcon>
+          </>
+        ) : (
+          <>
+            <Text>Қазір мәтін жоқ. Мәтін түрінде түсіндірме қосыныз!</Text>
+            <TextInput
+              style={{ marginTop: "10px", marginBottom: "10px" }}
+              placeholder="Мәтінді терініз."
+              value={textExp}
+              onChange={(e) => setTextExp(e.target.value)}
+            />
+            <Button onClick={handleTextSubmit}>Submit Text</Button>
+          </>
+        )}
       </Modal>
     </>
   );

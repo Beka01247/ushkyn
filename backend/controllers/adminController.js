@@ -168,6 +168,134 @@ exports.addSingleCorrectAnswer = async (req, res) => {
   }
 };
 
+exports.addVideoExplanation = async (req, res) => {
+  const { topicId, subtopicId, subsubtopicId, testId } = req.params;
+  const { newVideo } = req.body;
+
+  try {
+    const updatedTopic = await Topic.findByIdAndUpdate(
+      topicId,
+      {
+        $set: {
+          [`subtopics.$[subtopic].subsubtopics.$[subsubtopic].tests.$[test].videoExplanation`]:
+            newVideo,
+        },
+      },
+      {
+        new: true,
+        arrayFilters: [
+          { "subtopic._id": subtopicId },
+          { "subsubtopic._id": subsubtopicId },
+          { "test._id": testId },
+        ],
+      }
+    );
+
+    res.status(200).json(updatedTopic);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+exports.addTextExplanation = async (req, res) => {
+  const { topicId, subtopicId, subsubtopicId, testId } = req.params;
+  const { newText } = req.body;
+
+  try {
+    const updatedTopic = await Topic.findByIdAndUpdate(
+      topicId,
+      {
+        $set: {
+          [`subtopics.$[subtopic].subsubtopics.$[subsubtopic].tests.$[test].textExplanation`]:
+            newText,
+        },
+      },
+      {
+        new: true,
+        arrayFilters: [
+          { "subtopic._id": subtopicId },
+          { "subsubtopic._id": subsubtopicId },
+          { "test._id": testId },
+        ],
+      }
+    );
+
+    res.status(200).json(updatedTopic);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+exports.deleteTextExplanation = async (req, res) => {
+  const { topicId, subtopicId, subsubtopicId, testId } = req.params;
+
+  try {
+    const updatedTopic = await Topic.findByIdAndUpdate(
+      topicId,
+      {
+        $set: {
+          [`subtopics.$[subtopic].subsubtopics.$[subsubtopic].tests.$[test].textExplanation`]:
+            "",
+        },
+      },
+      {
+        new: true,
+        arrayFilters: [
+          { "subtopic._id": subtopicId },
+          { "subsubtopic._id": subsubtopicId },
+          { "test._id": testId },
+        ],
+      }
+    );
+
+    if (!updatedTopic) {
+      return res.status(404).json({
+        message:
+          "No topic found with the given ID or test not found within the topic.",
+      });
+    }
+
+    res.status(200).json(updatedTopic);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
+exports.deleteVideoExplanation = async (req, res) => {
+  const { topicId, subtopicId, subsubtopicId, testId } = req.params;
+
+  try {
+    const updatedTopic = await Topic.findByIdAndUpdate(
+      topicId,
+      {
+        $set: {
+          [`subtopics.$[subtopic].subsubtopics.$[subsubtopic].tests.$[test].videoExplanation`]:
+            "",
+        },
+      },
+      {
+        new: true,
+        arrayFilters: [
+          { "subtopic._id": subtopicId },
+          { "subsubtopic._id": subsubtopicId },
+          { "test._id": testId },
+        ],
+      }
+    );
+
+    if (!updatedTopic) {
+      return res.status(404).json({
+        message:
+          "No topic found with the given ID or test not found within the topic.",
+      });
+    }
+
+    res.status(200).json(updatedTopic);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 exports.deleteTopic = async (req, res) => {
   try {
     await Topic.findByIdAndDelete(req.params.id);

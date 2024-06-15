@@ -36,6 +36,26 @@ router.post(
   requireAdmin,
   adminController.addSingleCorrectAnswer
 );
+router.post(
+  "/topics/:topicId/subtopics/:subtopicId/subsubtopic/:subsubtopicId/tests/:testId/addVideoExp",
+  requireAdmin,
+  adminController.addVideoExplanation
+);
+router.post(
+  "/topics/:topicId/subtopics/:subtopicId/subsubtopic/:subsubtopicId/tests/:testId/addTextExp",
+  requireAdmin,
+  adminController.addTextExplanation
+);
+router.delete(
+  "/topics/:topicId/subtopics/:subtopicId/subsubtopic/:subsubtopicId/tests/:testId/deleteTextExp",
+  requireAdmin,
+  adminController.deleteTextExplanation
+);
+router.delete(
+  "/topics/:topicId/subtopics/:subtopicId/subsubtopic/:subsubtopicId/tests/:testId/deleteVideoExp",
+  requireAdmin,
+  adminController.deleteVideoExplanation
+);
 router.delete(
   "/topics/:topicId/subtopics/:subtopicId/subsubtopic/:subsubtopicId/tests/:testId/delete",
   requireAdmin,
